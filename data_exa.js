@@ -8,7 +8,8 @@ export default userData =   {
             password: "eyJ0eXAiOiJKV1QiLCJhbsciOiJIUzI1NiJ9.eyJzdWIiOiIWeRtU2ZWMyYjUyNjgxNzE2YmXiNz",
             bio: "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters,",
             birthdate: 1580219792080,
-            age: 17
+            location: "Bogotá D.C"
+            
         },
         medicalInfo: {  
             state: true, 
