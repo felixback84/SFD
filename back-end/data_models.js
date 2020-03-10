@@ -1,28 +1,27 @@
 let db = {
 
-    // signup tutors
+    // signup users
     // app.post('/signup', signup);
 
-    // login tutors
+    // login users
     // app.post('/login', login);
 
-    // add tutor details
-    // app.post('/tutor', FBAuth, addTutorDetails);
+    // add user details
+    // app.post('/user', FBAuth, addUserDetails);
 
-    // post image of tutor
-    // app.post('/tutor/image', FBAuth, uploadTutorImage);
+    // post image of user
+    // app.post('/user/image', FBAuth, uploadUserImage);
 
-    // get all own tutor data (auth)
-    // app.get('/tutor', FBAuth, getAuthenticatedTutor);
+    // get all own user data (auth)
+    // app.get('/user', FBAuth, getAuthenticatedUser);
 
-    tutors: [
+    users: [
         {   
-            tutorId: 'gj42hyyuo4m37k345k5dh83',
-            typeOfRelation: ['madre', 'padre', 'hermano', 'otro'],
+            userId: 'gj42hyyuo4m37k345k5dh83',
             names: 'Carlos Alberto',
             lastname: 'Talero Jaocme',
             email: 'carlos.talero.jacome@gmail.com',
-            handle: 'CarlosTal84',
+            userhandle: 'CarlosTal84',
             password: 'ashed-string',
             phone: 573005256068,
             location: 'Lonodn, UK',
@@ -32,46 +31,25 @@ let db = {
         }
     ],
 
-    // add kid details
-    // app.post('/kid', FBAuth, addKidDetails);
+    // get all user adventures
+    // app.get('/user-adventures', FBAuth, getUserAdventures);
 
-    // get kid data
-    // app.get('/kid', FBAuth, getKidDetails);
-
-    kids: [
-        {   
-            tutorId: 'gj42hyyuo4m37k345k5dh83',
-            handle: 'CarlosTal84',
-            kidId: 'dh23ggj5h32g543j5gf43',
-            kidHandle: 'Camilin15',
-            names: 'Camilo Alberto',
-            lastname: 'Talero García',
-            typeOfRelation: ['son', 'brother', 'other'],
-            birthdate: '2015-09-06',
-            createdAt: '2019-03-15T10:59:52.798Z'
-        }
-    ],
-
-    // get all kid adventures
-    // app.get('/kid-adventures', FBAuth, getKidAdventures);
-
-    // post buy kid adventure
-    // app.post('/kid-adventures/:adventureId/buy', FBAuth, postBuyKidAdventure);
+    // post buy user adventure
+    // app.post('/user-adventures/:adventureId/buy', FBAuth, postBuyUserAdventure);
 
     // post active adventure
-    // app.post('/kid-adventures/:adventureId/active', FBAuth, postActiveKidAdventure);
+    // app.get('/user-adventures/:adventureId/active', FBAuth, getActiveUserAdventure);
     
     // post favorite adventure
-    // app.post('/kid-adventures/:adventureId/favorite', FBAuth, postFavoriteKidAdventure);
+    // app.get('/user-adventures/:adventureId/favorite', FBAuth, getFavoriteUserAdventure);
 
     // get all favorite adventures
-    // app.get('/kid-adventures/favorites', FBAuth, getFavoritesKidAdventures);
+    // app.get('/user-adventures/favorites', FBAuth, getFavoritesUserAdventures);
 
-    kidAdventures: [
+    userAdventures: [
         {   
-            kidAdventuresId: 'FfHXu3DNdLZUzeaSIjaa',
-            tutorHandle: 'CarlosTal84',
-            kidHandle: 'Camili15',
+            userAdventuresId: 'FfHXu3DNdLZUzeaSIjaa',
+            userHandle: 'CarlosTal84',
             adventureId:'dmn23gtj5h62g563p5gf467',
             active: true,
             createdAt: '2019-03-15T10:59:52.798Z',
@@ -79,22 +57,21 @@ let db = {
         }
     ], 
 
-    // get all kid devices
-    // app.get('/kid-devices', FBAuth, getKidDevices);
+    // get all user devices
+    // app.get('/user-devices', FBAuth, getUserDevices);
 
-    // post a kid device
-    // app.post('/kid-devices', FBAuth, postKidDevices);
+    // post a user device
+    // app.post('/user-devices', FBAuth, postUserDevices);
 
-    // post buy kid devices
-    // app.post('/kid-devices/:deviceId/buy', FBAuth, postBuyKidDevice);
+    // post buy user devices
+    // app.post('/user-devices/:deviceId/buy', FBAuth, postBuyUserDevice);
 
-    kidDevices: [
+    userDevices: [
         {   
-            kidDevicesId: 'vwUPg64eysTLaok4CVn4',
+            userDevicesId: 'vwUPg64eysTLaok4CVn4',
             deviceId: 'MZInC971tJYurv3OYzjR',
-            tutorHandle: 'CarlosTal84',
-            kidHandle: 'Camilin15',
-            nameOfDevice: 'halo',
+            userHandle: 'CarlosTal84',
+            createdAt: '2019-03-15T10:59:52.798Z',
             active: true | false
         }
     ],
@@ -140,53 +117,35 @@ let db = {
         }
     ],
 
-    // like for adventure
-    // app.get('/adventure/:adventureId/like', FBAuth, likeAdventure);
+    // likes
+    // app.get('/adventure/:adventureId/like', FBAuth, like);
+    // app.get('/device/:deviceId/like', FBAuth, like);
 
-    // unlike for adventure
-    // app.get('/adventure/:adventureId/unlike', FBAuth, unlikeAdventure);
+    // unlikes
+    // app.get('/adventure/:adventureId/unlike', FBAuth, unlike);
+    // app.get('/device/:deviceId/unlike', FBAuth, unlike);
 
-    likesForAdventures: [
+    likes: [
         {
-            tutorHandle: 'CarlosTal84',
-            adventureId: '3vvH32idn5cGF0BESWVl'
+            userhandle: 'CarlosTal84',
+            deviceId: 'MZInC971tJYurv3OYzjR',
+            adventureId: null,
+            type: 'adventures | devices'
         }
     ],
 
-    // post comment in one adventure
-    // app.post('/adveture/:adventureId/comment', FBAuth, commentOnAdventure);
+    // post comments
+    // app.post('/adventure/:adventureId/comment', FBAuth, postComment);
+    // app.post('/device/:deviceId/comment', FBAuth, postComment);
 
-    commentsForAdventures: [
+    comments: [
         {
-            tutorHandle: 'CarlosTal84',
-            adventureId: '3vvH32idn5cGF0BESWVl',
-            bodyComment: 'nice one mate!',
-            createdAt: '2019-03-15T10:59:52.798Z'
-        }
-    ],
-
-    // like for device
-    // app.get('/device/:deviceId/like', FBAuth, likeDevice);
-
-    // unlike for device
-    // app.get('/device/:deviceId/unlike', FBAuth, unlikeDevice);
-
-    likesForDevices: [
-        {
-            tutorHandle: 'CarlosTal84',
-            deviceId: 'MZInC971tJYurv3OYzjR'
-        }
-    ],
-
-    // post comment in one device
-    // app.post('/device/:deviceId/comment', FBAuth, commentOnDevice);
-
-    commentsForDevices: [
-        {
-            tutorHandle: 'CarlosTal84',
+            userhandle: 'CarlosTal84',
             deviceId: 'dmn23gtj5h62g563p5gf467',
+            adventureId: null,
             bodyComment: 'nice one mate!',
-            createdAt: '2019-03-15T10:59:52.798Z'
+            createdAt: '2019-03-15T10:59:52.798Z',
+            type: 'adventures | devices'
         }
     ],
 
@@ -198,9 +157,9 @@ let db = {
             read: true | false,
             type: 'adventures | devices',
             createdAt: '2019-03-15T10:59:52.798Z',
-            sendTo: 'CarlosTal84',
-            kidAdventuresId: null,
-            kidDevicesId: 'vwUPg64eysTLaok4CVn4' 
+            sendToUserHandle: 'CarlosTal84',
+            userAdventuresId: null,
+            userDevicesId: 'vwUPg64eysTLaok4CVn4' 
         }
     ]
 }

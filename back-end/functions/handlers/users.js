@@ -13,7 +13,7 @@ const {
 
 // signup
 exports.signup = (req, res) => {
-    const newTutor = {
+    const newUser = {
         email: req.body.email,
         password: req.body.password,
         confirmPassword: req.body.confirmPassword,
@@ -28,10 +28,10 @@ exports.signup = (req, res) => {
     const noImg = 'no-img.png';
 
     // db consult
-    let token, tutorId;
+    let token, userId;
 
     db 
-        .doc(`/tutors/${newTutor.handle}`)
+        .doc(`/users/${newUser.handle}`)
         .get()
         .then((doc) => {
             // check if the handle exists
@@ -40,26 +40,26 @@ exports.signup = (req, res) => {
             } else {
                 return firebase
                     .auth()
-                    .createUserWithEmailAndPassword(newTutor.email, newTutor.password);
+                    .createUserWithEmailAndPassword(newUser.email, newUser.password);
             }
         })
         .then((data) => {
-            tutorId = data.user.uid;
+            userId = data.user.uid;
             return data.user.getIdToken();
         })
-        // db with user tutor credentials
+        // db with user user credentials
         .then((idToken) => {
             token = idToken;
-            const tutorCredentials = {
-                handle: newTutor.handle,
-                email: newTutor.email,
+            const userCredentials = {
+                handle: newUser.handle,
+                email: newUser.email,
                 createdAt: new Date().toISOString(),
                 imgUrl: `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${noImg}?alt=media`,
-                tutorId
+                userId
             };
             return db
-                        .doc(`/tutors/${newTutor.handle}`)
-                        .set(tutorCredentials);
+                        .doc(`/users/${newUser.handle}`)
+                        .set(userCredentials);
         })
         .then(() => {
             return res.status(201).json({ token });
