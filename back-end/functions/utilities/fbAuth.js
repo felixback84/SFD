@@ -18,14 +18,14 @@ module.exports = (req,res,next) => {
         .then(decodedToken => {
             req.user = decodedToken;
             console.log(decodedToken); //mirar que devuelve
-            return db.collection('tutors')
+            return db.collection('users')
                 .where('userId', '==', req.user.uid)
                 .limit(1)
                 .get();
         })
         .then((data) => {
-            req.user.handle = data.docs[0].data().handle;
-            req.user.imageUrl = data.docs[0].data().imgUrl;
+            req.user.userHandle = data.docs[0].data().userHandle;
+            req.user.imgUrl = data.docs[0].data().imgUrl;
             return next();
         })
         .catch((err) => {

@@ -1,5 +1,5 @@
 
-module.export = {
+module.exports = {
     apiKey: "AIzaSyCvNH7li6Sx1GDcYYYGeMm0civ9hZyH6q4",
     authDomain: "sfdd-d8a16.firebaseapp.com",
     databaseURL: "https://sfdd-d8a16.firebaseio.com",

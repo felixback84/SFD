@@ -1,12 +1,12 @@
 let db = {
 
-    // signup users
+    // signup users ***
     // app.post('/signup', signup);
 
-    // login users
+    // login users ***
     // app.post('/login', login);
 
-    // add user details
+    // add user details **
     // app.post('/user', FBAuth, addUserDetails);
 
     // post image of user
@@ -22,7 +22,6 @@ let db = {
             lastname: 'Talero Jaocme',
             email: 'carlos.talero.jacome@gmail.com',
             userhandle: 'CarlosTal84',
-            password: 'ashed-string',
             phone: 573005256068,
             location: 'Lonodn, UK',
             createdAt: '2019-03-15T10:59:52.798Z',
@@ -34,26 +33,19 @@ let db = {
     // get all user adventures
     // app.get('/user-adventures', FBAuth, getUserAdventures);
 
-    // post buy user adventure
-    // app.post('/user-adventures/:adventureId/buy', FBAuth, postBuyUserAdventure);
+    // post a user adventure
+    // app.post('/user-adventures', FBAuth, postUserAdventure);
 
     // post active adventure
-    // app.get('/user-adventures/:adventureId/active', FBAuth, getActiveUserAdventure);
+    // app.post('/user-adventures/:adventureId/active', FBAuth, postActiveUserAdventure);
     
-    // post favorite adventure
-    // app.get('/user-adventures/:adventureId/favorite', FBAuth, getFavoriteUserAdventure);
-
-    // get all favorite adventures
-    // app.get('/user-adventures/favorites', FBAuth, getFavoritesUserAdventures);
-
     userAdventures: [
         {   
             userAdventuresId: 'FfHXu3DNdLZUzeaSIjaa',
             userHandle: 'CarlosTal84',
             adventureId:'dmn23gtj5h62g563p5gf467',
-            active: true,
             createdAt: '2019-03-15T10:59:52.798Z',
-            favorite: true | false
+            active: true | false
         }
     ], 
 
@@ -63,8 +55,8 @@ let db = {
     // post a user device
     // app.post('/user-devices', FBAuth, postUserDevices);
 
-    // post buy user devices
-    // app.post('/user-devices/:deviceId/buy', FBAuth, postBuyUserDevice);
+    // post active device
+    // app.post('/user-device/:deviceId/active', FBAuth, postActiveUserDevice);
 
     userDevices: [
         {   
@@ -141,11 +133,25 @@ let db = {
     comments: [
         {
             userhandle: 'CarlosTal84',
-            deviceId: 'dmn23gtj5h62g563p5gf467',
+            deviceId: 'MZInC971tJYurv3OYzjR',
             adventureId: null,
             bodyComment: 'nice one mate!',
             createdAt: '2019-03-15T10:59:52.798Z',
             type: 'adventures | devices'
+        }
+    ],
+
+    // get the favorite content of the user
+    // app.get('/adventure/:adventureId/favorite', FBAuth, getFavoriteUserAdventure);
+
+    // get all favorite adventures
+    // app.get('/adventures/favorites', FBAuth, getFavoritesUserAdventures);
+
+    favoriteContent: [
+        {
+            userHandle: 'CarlosTal84',
+            adventureId: '3vvH32idn5cGF0BESWVl',
+            type: 'adventures'
         }
     ],
 
