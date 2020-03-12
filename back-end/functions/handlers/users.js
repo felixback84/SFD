@@ -121,7 +121,7 @@ exports.addUserDetails = (req, res) => {
 };
 
 // upload user image
-exports.uploadImage = (req, res) => {
+exports.uploadUserImage = (req, res) => {
     const BusBoy = require('busboy');
     const path = require('path');
     const os = require('os');

@@ -14,32 +14,49 @@ const FBAuth = require('./utilities/fbAuth');
 const { 
     signup,  
     login,
-    addTutorDetails,
-    uploadTutorImage,
-    getAuthenticatedTutor
-} = require('./handlers/tutors');
+    addUserDetails,
+    uploadUserImage,
+    getAuthenticatedUser
+} = require('./handlers/users');
 
+// devices
+const { 
+    getAllDevices,
+    getDevice
+} = require('./handlers/devices');
+
+// adventures
+const { 
+    getAllAdventures,
+    getAdventure
+} = require('./handlers/adventures');
 
 // rest routes
 // users
-//signup tutors
+//signup user
 app.post('/signup', signup);
-//login tutors
+//login user
 app.post('/login', login);
-//add tutor details
-app.post('/tutor', FBAuth, addTutorDetails);
-//post image of tutor
-app.post('/tutor/image', FBAuth, uploadTutorImage);
-//get all own tutor data (auth)
-app.get('/tutor', FBAuth, getAuthenticatedTutor);
+//add user details
+app.post('/user', FBAuth, addUserDetails);
+//post image of user
+app.post('/user/image', FBAuth, uploadUserImage);
+//get all own user data (auth)
+//app.get('/user', FBAuth, getAuthenticatedUser);
+
+// devices
+// get all devices
+app.get('/devices', getAllDevices);
+// get one device:pub
+app.get('/devices/:deviceId', getDevice);
+
+// adventures
+// get all adventures
+app.get('/adventures', getAllAdventures);
+// get one adventure:pub
+app.get('/adventures/:adventureId', getAdventure);
 
 // expotrt functions
 exports.api = functions.https.onRequest(app);
 
 
-
-
-
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//     response.send("Hello from Firebase!");
-// });

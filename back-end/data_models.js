@@ -9,7 +9,7 @@ let db = {
     // add user details **
     // app.post('/user', FBAuth, addUserDetails);
 
-    // post image of user
+    // post image of user ***
     // app.post('/user/image', FBAuth, uploadUserImage);
 
     // get all own user data (auth)
@@ -23,7 +23,7 @@ let db = {
             email: 'carlos.talero.jacome@gmail.com',
             userhandle: 'CarlosTal84',
             phone: 573005256068,
-            location: 'Lonodn, UK',
+            location: 'London, UK',
             createdAt: '2019-03-15T10:59:52.798Z',
             imageUrl: 'image/dsfsdkfghskdfgs/dgfdhfgdh',
             bio: 'Hello, my name is user, nice to meet you'
@@ -91,10 +91,10 @@ let db = {
         }
     ],
 
-    // get all devices
+    // get all devices ***
     // app.get('/devices', getAllDevices);
 
-    // get one device:pub
+    // get one device:pub ***
     // app.get('/device/:deviceId', getAllDevices);
 
     devices: [
