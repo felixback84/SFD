@@ -171,3 +171,79 @@ exports.uploadUserImage = (req, res) => {
     });
     busboy.end(req.rawBody);
 };
+
+// get all user info (auth)
+exports.getAuthenticatedUser = (req, res) => {
+    let userData = {};
+    db.doc(`/users/${req.user.userHandle}`)
+        .get()
+        .then((doc) => {
+            if (doc.exists) {
+            userData.credentials = doc.data();
+            return db
+                .collection('userDevices')
+                .where('userHandle', '==', req.user.userHandle)
+                .get();
+            }
+        }) 
+        .then((data) => {
+            userData.userDevices = [];
+            data.forEach((doc) => {
+                userData.userDevices.push(doc.data());
+            });
+            return db
+                .collection('userAdventures')
+                .where('userHandle', '==', req.user.userHandle)
+                // .orderBy('createdAt', 'desc')
+                // .limit(10)
+                .get();
+        })
+        .then((data) => {
+            userData.userAdventures = [];
+            data.forEach((doc) => {
+                userData.userAdventures.push(doc.data());
+            });
+            //return res.json(userData);
+            return db
+                .collection('likes')
+                .where('userHandle', '==', req.user.userHandle)
+                // .orderBy('createdAt', 'desc')
+                // .limit(10)
+                .get();
+        })
+        .then((data) => {
+            userData.likes = [];
+            data.forEach((doc) => {
+                userData.likes.push(doc.data());
+            });
+            return db
+                .collection('comments')
+                .where('userHandle', '==', req.user.userHandle)
+                // .orderBy('createdAt', 'desc')
+                // .limit(10)
+                .get();
+        })
+        .then((data) => {
+            userData.comments = [];
+            data.forEach((doc) => {
+                userData.comments.push(doc.data());
+            });
+            return db
+                .collection('favoriteContent')
+                .where('userHandle', '==', req.user.userHandle)
+                // .orderBy('createdAt', 'desc')
+                // .limit(10)
+                .get();
+        })
+        .then((data) => {
+            userData.favoriteContent = [];
+            data.forEach((doc) => {
+                userData.favoriteContent.push(doc.data());
+            });
+            return res.json(userData);
+        })
+        .catch((err) => {
+            console.error(err);
+            return res.status(500).json({ error: err.code });
+        });
+};

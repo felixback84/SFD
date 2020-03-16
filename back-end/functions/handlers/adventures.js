@@ -83,3 +83,67 @@ exports.getAdventure = (req, res) => {
             res.status(500).json({ error: err.code });
         });
 };
+
+// Post an adventure for an user
+exports.postInUserAdventures = (req, res) => {
+    const newUserAdventure = {
+        deviceId: req.params.adventureId,
+        userHandle: req.user.userHandle,
+        createdAt: new Date().toISOString(),
+        active: true 
+    };
+
+    db
+        .collection(`userAdventures`)
+        .add(newUserAdventure)
+        .then((doc) => {
+            const resUserAdventure = newUserAdventure;
+            resUserAdventure.userAdventuresId = doc.id;
+            res.json(resUserAdventure);
+        })
+        .catch((err) => {
+            res.status(500).json({ error: 'something went wrong' });
+            console.error(err);
+        });
+};
+
+// post active adventure
+exports.postInActiveUserAdventure = (req, res) => {
+    db
+        .doc(`/userAdventures/${req.params.userAdventuresId}`)
+        .get()
+        .then((doc) => {
+            if (!doc.exists) {
+                return res.status(404).json({ error: 'user adventure not found' });
+            }
+            return doc.ref.update({ active: true });
+        })
+        .then(() => {
+            res.json({ message: 'Adventure active' });
+        })
+        .catch((err) => {
+            res.status(500).json({ error: 'something went wrong' });
+            console.error(err);
+        }); 
+}  
+
+// post inactive adventure
+exports.postInInactiveUserAdventure = (req, res) => {
+    db
+        .doc(`/userAdventures/${req.params.userAdventuresId}`)
+        .get()
+        .then((doc) => {
+            if (!doc.exists) {
+                return res.status(404).json({ error: 'user adventure not found' });
+            }
+            return doc.ref.update({ active: false });
+        })
+        .then(() => {
+            res.json({ message: 'Adventure Inactive' });
+        })
+        .catch((err) => {
+            res.status(500).json({ error: 'something went wrong' });
+            console.error(err);
+        }); 
+} 
+

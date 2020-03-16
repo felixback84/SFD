@@ -12,7 +12,7 @@ let db = {
     // post image of user ***
     // app.post('/user/image', FBAuth, uploadUserImage);
 
-    // get all own user data (auth)
+    // get all own user data (auth) ***
     // app.get('/user', FBAuth, getAuthenticatedUser);
 
     users: [
@@ -28,17 +28,23 @@ let db = {
             imageUrl: 'image/dsfsdkfghskdfgs/dgfdhfgdh',
             bio: 'Hello, my name is user, nice to meet you'
         }
-    ],
+    ], 
 
-    // get all user adventures
-    // app.get('/user-adventures', FBAuth, getUserAdventures);
+    // get all user adventures ***
+    // app.get('/user-adventures', FBAuth, getUserAdventures); or 
+    // app.get('/user', FBAuth, getAuthenticatedUser); ***
 
-    // post a user adventure
-    // app.post('/user-adventures', FBAuth, postUserAdventure);
+    // post a user adventure ***
+    // app.post('/user-adventures', FBAuth, postUserAdventure); or 
+    // app.post('/user/:adventureId/buy-adventure', FBAuth, postInUserAdventures); ***
 
-    // post active adventure
-    // app.post('/user-adventures/:adventureId/active', FBAuth, postActiveUserAdventure);
-    
+    // post active adventure ***
+    // app.post('/user-adventures/:adventureId/active', FBAuth, postActiveUserAdventure); or 
+    // app.post('/user/adventure/:userAdventuresId/active', FBAuth, postActiveUserAdventure); ***
+
+    // post inactive adventure ***
+    // app.post('/user/adventure/:userAdventuresId/inactive', FBAuth, postInInactiveUserAdventure);
+
     userAdventures: [
         {   
             userAdventuresId: 'FfHXu3DNdLZUzeaSIjaa',
@@ -49,14 +55,20 @@ let db = {
         }
     ], 
 
-    // get all user devices
-    // app.get('/user-devices', FBAuth, getUserDevices);
+    // get all user devices ***
+    // app.get('/user-devices', FBAuth, getUserDevices); or
+    // app.get('/user', FBAuth, getAuthenticatedUser); ***
 
-    // post a user device
-    // app.post('/user-devices', FBAuth, postUserDevices);
+    // post a user device ***
+    // app.post('/user-devices', FBAuth, postUserDevices); or 
+    // app.post('/user/:deviceId/buy-device', FBAuth, postInUserDevices); ***
 
-    // post active device
-    // app.post('/user-device/:deviceId/active', FBAuth, postActiveUserDevice);
+    // post active device ***
+    // app.post('/user-device/:deviceId/active', FBAuth, postActiveUserDevice); or
+    // app.post('/user/device/:userDevicesId/active', FBAuth, postActiveUserDevice); ***
+
+    // post inactive device ***
+    // app.post('/user/device/:userDevicesId/inactive', FBAuth, postInInactiveUserDevice);
 
     userDevices: [
         {   
@@ -68,10 +80,10 @@ let db = {
         }
     ],
 
-    // get all adventures
+    // get all adventures ***
     // app.get('/adventures', getAllAdventures);
 
-    // get one adventure:pub
+    // get one adventure:pub ***
     // app.get('/adventures/:adventureId', getOneAdventure);
 
     adventures: [
@@ -111,7 +123,7 @@ let db = {
 
     // likes
     // app.get('/adventure/:adventureId/like', FBAuth, like);
-    // app.get('/device/:deviceId/like', FBAuth, like);
+    // app.get('/device/:deviceId/like', FBAuth, like); ***
 
     // unlikes
     // app.get('/adventure/:adventureId/unlike', FBAuth, unlike);
