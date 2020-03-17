@@ -142,7 +142,7 @@ exports.postInInactiveUserDevice = (req, res) => {
         }); 
 }  
 
-// Like a scream
+// Like a device
 exports.likeDevice = (req, res) => {
     const likeDocument = db
         .collection('likes')
@@ -189,6 +189,82 @@ exports.likeDevice = (req, res) => {
         .catch((err) => {
             console.error(err);
             res.status(500).json({ error: err.code });
-        });
+        });         
 };
 
+// Unlike a device
+exports.unlikeDevice = (req, res) => { 
+    const likeDocument = db
+    .collection('likes')
+    .where('userHandle', '==', req.user.userHandle)
+    .where('deviceId', '==', req.params.deviceId)
+    .limit(1);
+
+const deviceDocument = db.doc(`/devices/${req.params.deviceId}`);
+let deviceData;
+deviceDocument
+    .get()
+    .then((doc) => {
+        if (doc.exists) {
+            deviceData = doc.data();
+            deviceData.deviceId = doc.id;
+            return likeDocument.get();
+        } else {
+            return res.status(404).json({ error: 'Device not found' });
+        }
+    })
+    .then((data) => {
+        if (data.empty) {
+            return res.status(400).json({ error: 'Device not liked' });
+        } else {
+            return db
+                .doc(`/likes/${data.docs[0].id}`)
+                .delete()
+                .then(() => {
+                    deviceData.likesCount--;
+                    return deviceDocument.update({ likesCount: deviceData.likesCount });
+                })
+                .then(() => {
+                    res.json(deviceData);
+                });
+        }
+    })
+    .catch((err) => {
+        console.error(err);
+        res.status(500).json({ error: err.code });
+    });   
+}
+
+// Comment on a device
+exports.postDeviceComment = (req, res) => {
+    if (req.body.bodyComment.trim() === '')
+    return res.status(400).json({ comment: 'Must not be empty' });
+    const newCommentDevice = {
+        bodyComment: req.body.bodyComment,
+        createdAt: new Date().toISOString(),
+        deviceId: req.params.deviceId,
+        userHandle: req.user.userHandle,
+        userImage: req.user.imgUrl,
+        type: "devices"
+    };
+
+    db
+        .doc(`/devices/${req.params.deviceId}`)
+        .get()
+        .then((doc) => {
+            if (!doc.exists) {
+                return res.status(404).json({ error: 'Device not found' });
+            }
+            return doc.ref.update({ commentsCount: doc.data().commentsCount + 1 });
+        }) 
+        .then(() => {
+            return db.collection('comments').add(newCommentDevice);
+        })
+        .then(() => {
+            res.json(newCommentDevice);
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).json({ error: 'Something went wrong' });
+        });
+};

@@ -26,7 +26,9 @@ const {
     postInUserDevices,
     postInActiveUserDevice,
     postInInactiveUserDevice,
-    likeDevice
+    likeDevice,
+    unlikeDevice,
+    postDeviceComment
 } = require('./handlers/devices');
 
 // adventures
@@ -35,11 +37,15 @@ const {
     getAdventure,
     postInUserAdventures,
     postInActiveUserAdventure,
-    postInInactiveUserAdventure
+    postInInactiveUserAdventure,
+    likeAdventure,
+    unlikeAdventure,
+    postAdventureComment,
+    getFavoritesUserAdventures
 } = require('./handlers/adventures');
 
-// rest routes
-// users
+///////////////// API REST ROUTES //////////////
+// USERS
 //signup user
 app.post('/signup', signup);
 //login user
@@ -51,7 +57,7 @@ app.post('/user/image', FBAuth, uploadUserImage);
 //get all own user data (auth)
 app.get('/user', FBAuth, getAuthenticatedUser);
 
-// devices
+// DEVICES
 // get all devices
 app.get('/devices', getAllDevices);
 // get one device:pub
@@ -66,18 +72,35 @@ app.post('/user/device/:userDevicesId/inactive', FBAuth, postInInactiveUserDevic
 
 // like for device
 app.get('/device/:deviceId/like', FBAuth, likeDevice);
+// unlike for device
+app.get('/device/:deviceId/unlike', FBAuth, unlikeDevice);
 
-// adventures
+// comment on device
+app.post('/device/:deviceId/comment', FBAuth, postDeviceComment);
+
+// ADVENTURES
 // get all adventures
 app.get('/adventures', getAllAdventures);
 // get one adventure:pub
 app.get('/adventures/:adventureId', getAdventure);
+
 // post a user adventure
 app.post('/user/:adventureId/buy-adventure', FBAuth, postInUserAdventures);
 // post active adventure
 app.post('/user/adventure/:userAdventuresId/active', FBAuth, postInActiveUserAdventure);
 // post inactive adventure
 app.post('/user/adventure/:userAdventuresId/inactive', FBAuth, postInInactiveUserAdventure);
+
+// likes
+app.get('/adventure/:adventureId/like', FBAuth, likeAdventure);
+// unlikes
+app.get('/adventure/:adventureId/unlike', FBAuth, unlikeAdventure); 
+
+// comment on an adventure
+app.post('/adventure/:adventureId/comment', FBAuth, postAdventureComment);
+
+// get all favorite adventures
+app.get('/favorite-content/adventures', FBAuth, getFavoritesUserAdventures);
 
 
 // expotrt functions

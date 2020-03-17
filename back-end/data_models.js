@@ -121,13 +121,13 @@ let db = {
         }
     ],
 
-    // likes
-    // app.get('/adventure/:adventureId/like', FBAuth, like);
+    // likes ***
+    // app.get('/adventure/:adventureId/like', FBAuth, like); ***
     // app.get('/device/:deviceId/like', FBAuth, like); ***
 
-    // unlikes
-    // app.get('/adventure/:adventureId/unlike', FBAuth, unlike);
-    // app.get('/device/:deviceId/unlike', FBAuth, unlike);
+    // unlikes ***
+    // app.get('/adventure/:adventureId/unlike', FBAuth, unlike); ***
+    // app.get('/device/:deviceId/unlike', FBAuth, unlike); ***
 
     likes: [
         {
@@ -138,9 +138,9 @@ let db = {
         }
     ],
 
-    // post comments
-    // app.post('/adventure/:adventureId/comment', FBAuth, postComment);
-    // app.post('/device/:deviceId/comment', FBAuth, postComment);
+    // post comments ***
+    // app.post('/adventure/:adventureId/comment', FBAuth, postAdventureComment); ***
+    // app.post('/device/:deviceId/comment', FBAuth, postDeviceComment); ***
 
     comments: [
         {
@@ -153,11 +153,14 @@ let db = {
         }
     ],
 
-    // get the favorite content of the user
+    // favorites
     // app.get('/adventure/:adventureId/favorite', FBAuth, getFavoriteUserAdventure);
 
-    // get all favorite adventures
-    // app.get('/adventures/favorites', FBAuth, getFavoritesUserAdventures);
+    // unfavorites
+    // app.get('/adventure/:adventureId/unfavorite', FBAuth, getUnFavoriteUserAdventure);   
+
+    // get all favorite adventures to make a list
+    // app.get('/favorite-content/adventures', FBAuth, getFavoritesUserAdventures);***
 
     favoriteContent: [
         {
