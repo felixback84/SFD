@@ -41,7 +41,9 @@ const {
     likeAdventure,
     unlikeAdventure,
     postAdventureComment,
-    getFavoritesUserAdventures
+    getFavoritesUserAdventures,
+    favoriteAdventure,
+    unfavoriteAdventure
 } = require('./handlers/adventures');
 
 ///////////////// API REST ROUTES //////////////
@@ -101,6 +103,11 @@ app.post('/adventure/:adventureId/comment', FBAuth, postAdventureComment);
 
 // get all favorite adventures
 app.get('/favorite-content/adventures', FBAuth, getFavoritesUserAdventures);
+
+// favorites
+app.get('/adventure/:adventureId/favorite', FBAuth, favoriteAdventure);
+// unfavorites
+app.get('/adventure/:adventureId/unfavorite', FBAuth, unfavoriteAdventure);
 
 
 // expotrt functions

@@ -85,20 +85,58 @@ exports.postInUserDevices = (req, res) => {
         deviceId: req.params.deviceId,
         userHandle: req.user.userHandle,
         createdAt: new Date().toISOString(),
-        active: true 
+        active: false
     };
 
-    db
-        .collection(`userDevices`)
-        .add(newUserDevice)
-        .then((doc) => {
-            const resUserDevice = newUserDevice;
-            resUserDevice.userDevicesId = doc.id;
-            res.json(resUserDevice);
+    // object to hold all info, newUserDevice, deviceData
+    let allUserDeviceData = {};
+    allUserDeviceData = newUserDevice;
+
+    let userDevices = db
+        .collection('userDevices')
+    let userDevicesFilter = userDevices
+        .where('userHandle', '==', req.user.userHandle)
+        .where('deviceId', '==', req.params.deviceId)
+        .limit(1)
+        .get()
+        .then((data) => {
+            if (!data.empty) {
+                return res.status(404).json({ error: 'Adventure already yours' });
+            } else {
+                let subCollectionDataSetModel;
+                db
+                    .doc(`/devices/${req.params.deviceId}`)
+                    .get()
+                    .then((doc) => {
+                        // now save the select info of .doc (device) of the collection
+                        let selectInfoDevice = {
+                            nameOfDevice: doc.data().nameOfDevice,
+                            createdAt: doc.data().createdAt,
+                            ageRate: doc.data().ageRate,
+                        };
+                        // save data set model for device
+                        subCollectionDataSetModel = doc.data().dataSets;
+                        // save select info of device without dataSets
+                        allUserAdventureData.device = selectInfoDevice;
+                        // write in global object
+                        return userDevices.add(allUserDeviceData);   
+                    })
+                    .then((doc) => {
+                        //return res.json(allUserDeviceData);
+                        return userDevicesFilter.doc(doc.id).collection('dataSets').add(subCollectionDataSetModel);
+                    })
+                    .catch((err) => {
+                        console.error(err);
+                        res.status(500).json({ error: err.code });
+                    });
+            }
         })
+        .then(() => {
+            return res.json(allUserDeviceData);
+        })            
         .catch((err) => {
-            res.status(500).json({ error: 'something went wrong' });
             console.error(err);
+            res.status(500).json({ error: err.code });
         });
 };
 

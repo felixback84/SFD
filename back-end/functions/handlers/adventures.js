@@ -86,26 +86,64 @@ exports.getAdventure = (req, res) => {
 
 // Post an adventure for an user
 exports.postInUserAdventures = (req, res) => {
+     // object to save and send main data in collection userAdventure (header info)
     const newUserAdventure = {
-        deviceId: req.params.adventureId,
+        adventureId: req.params.adventureId,
         userHandle: req.user.userHandle,
         createdAt: new Date().toISOString(),
-        active: true 
+        active: false
     };
 
+    // object to hold all info, newUserAdventure, adventureData
+    let allUserAdventureData = {};
+    allUserAdventureData = newUserAdventure;
+
     db
-        .collection(`userAdventures`)
-        .add(newUserAdventure)
-        .then((doc) => {
-            const resUserAdventure = newUserAdventure;
-            resUserAdventure.userAdventuresId = doc.id;
-            res.json(resUserAdventure);
-        })
-        .catch((err) => {
-            res.status(500).json({ error: 'something went wrong' });
-            console.error(err);
-        });
-};
+    .collection('userAdventures')
+    .where('userHandle', '==', req.user.userHandle)
+    .where('adventureId', '==', req.params.adventureId)
+    .limit(1)
+    .get()
+    .then((data) => {
+        if (!data.empty) {
+            return res.status(404).json({ error: 'Adventure already yours' });
+        } else {
+            db
+                .doc(`/adventures/${req.params.adventureId}`)
+                .get()
+                .then((doc) => {
+                    // now save the select info of .doc (adventure) of the collection
+                    let selectInfoAdventure = {
+                        title: doc.data().title,
+                        description: doc.data().description,
+                        imageUrl: doc.data().imageUrl,
+                        createdAt: doc.data().createdAt,
+                        duration: doc.data().duration,
+                        tags: doc.data().tags,
+                        language: doc.data().language,
+                        audioUrl: doc.data().audioUrl
+                    } 
+                    allUserAdventureData.adventure = selectInfoAdventure;
+                    // write in global object
+                    return db
+                        .collection('userAdventures')
+                        .add(allUserAdventureData) 
+                
+                })
+                .then(() => {
+                    return res.json(allUserAdventureData);
+                })
+                .catch((err) => {
+                    console.error(err);
+                    res.status(500).json({ error: err.code });
+                });
+        }
+    })            
+    .catch((err) => {
+        console.error(err);
+        res.status(500).json({ error: err.code });
+    });
+}    
 
 // post active adventure
 exports.postInActiveUserAdventure = (req, res) => {
@@ -293,4 +331,14 @@ exports.getFavoritesUserAdventures = (req, res) => {
             return res.json(favoriteContentAdventures);
         })
         .catch((err) => console.error(err));
+}
+
+// favorite adventure
+exports.favoriteAdventure = (req, res) => {
+    
+};
+
+// unfavorite an adventure
+exports.unfavoriteAdventure = (req, res) => { 
+    
 }

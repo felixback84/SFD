@@ -51,7 +51,18 @@ let db = {
             userHandle: 'CarlosTal84',
             adventureId:'dmn23gtj5h62g563p5gf467',
             createdAt: '2019-03-15T10:59:52.798Z',
-            active: true | false
+            active: true | false,
+            adventureData: {
+                adventureId: '3vvH32idn5cGF0BESWVl',
+                title: 'Wild spaces adventures',
+                description: 'hello from description of the adventure',
+                imageUrl: 'image/dsfsdkfghskdfgs/dgfdhfgdh',
+                createdAt: '2019-03-15T10:59:52.798Z',
+                duration: 60,
+                tags: ['adventure', 'space'],
+                language: ['english'], 
+                audioUrl: 'audio/dsfsdkfghskdfgs/dgfdhfgdh'
+            }
         }
     ], 
 
@@ -76,7 +87,38 @@ let db = {
             deviceId: 'MZInC971tJYurv3OYzjR',
             userHandle: 'CarlosTal84',
             createdAt: '2019-03-15T10:59:52.798Z',
-            active: true | false
+            active: true | false,
+            deviceData: {
+                nameOfDevice: 'halo',
+                createdAt: '2019-03-15T10:59:52.798Z',
+                ageRate: '4 to 8 years',
+            },
+            dataSets:  // sub - collection in userDevices post not get
+                [
+                    {   
+                        on: false,
+                        connected: false,
+                        createdAt: '2019-03-15T10:59:52.798Z',
+                        tail: {
+                            proximity: false,
+                            temperature: 0,
+                            pressure: 0,
+                            motion: 0,
+                            position: {
+                                x: 0,
+                                y: 0,
+                                z: 0
+                            }
+                        },
+                        midi: {
+                            color: "#fff",
+                            speakers: false,
+                            mic: false,
+                            lights: false,
+                            vibration: false
+                        }
+                    }
+                ]
         }
     ],
 
@@ -90,7 +132,7 @@ let db = {
         {   
             adventureId: '3vvH32idn5cGF0BESWVl',
             title: 'Wild spaces adventures',
-            description: 'hello from description of the dventure',
+            description: 'hello from description of the adventure',
             imageUrl: 'image/dsfsdkfghskdfgs/dgfdhfgdh',
             createdAt: '2019-03-15T10:59:52.798Z',
             price: 19.99,
@@ -117,17 +159,42 @@ let db = {
             price: 199.99,
             ageRate: '4 to 8 years',
             likesCount: 2,
-            commentsCount: 3
+            commentsCount: 3,
+            dataSets:  // exe object to design the sub - collection in userDevices
+                {   
+                    dataSetsId: 'MZInC971tJYurv3OYzjR',
+                    on: false,
+                    connected: false,
+                    createdAt: '2019-03-15T10:59:52.798Z',
+                    tail: {
+                        proximity: 0,
+                        temperature: 0,
+                        pressure: 0,
+                        motion: 0,
+                        position: {
+                            x: 0,
+                            y: 0,
+                            z: 0
+                        }
+                    },
+                    midi: {
+                        color: "#fff",
+                        speakers: false,
+                        mic: false,
+                        lights: false,
+                        vibration: false
+                    }
+                }
         }
     ],
 
     // likes ***
-    // app.get('/adventure/:adventureId/like', FBAuth, like); ***
-    // app.get('/device/:deviceId/like', FBAuth, like); ***
+    // app.get('/adventure/:adventureId/like', FBAuth, likeAdventure); ***
+    // app.get('/device/:deviceId/like', FBAuth, likeDevice); ***
 
     // unlikes ***
-    // app.get('/adventure/:adventureId/unlike', FBAuth, unlike); ***
-    // app.get('/device/:deviceId/unlike', FBAuth, unlike); ***
+    // app.get('/adventure/:adventureId/unlike', FBAuth, unlikeAdventure); ***
+    // app.get('/device/:deviceId/unlike', FBAuth, unlikeDevice); ***
 
     likes: [
         {
@@ -154,10 +221,10 @@ let db = {
     ],
 
     // favorites
-    // app.get('/adventure/:adventureId/favorite', FBAuth, getFavoriteUserAdventure);
+    // app.get('/adventure/:adventureId/favorite', FBAuth, favoriteAdventure);
 
     // unfavorites
-    // app.get('/adventure/:adventureId/unfavorite', FBAuth, getUnFavoriteUserAdventure);   
+    // app.get('/adventure/:adventureId/unfavorite', FBAuth, unfavoriteAdventure);   
 
     // get all favorite adventures to make a list
     // app.get('/favorite-content/adventures', FBAuth, getFavoritesUserAdventures);***
