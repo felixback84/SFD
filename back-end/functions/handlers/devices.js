@@ -92,9 +92,8 @@ exports.postInUserDevices = (req, res) => {
     let allUserDeviceData = {};
     allUserDeviceData = newUserDevice;
 
-    let userDevices = db
+    db
         .collection('userDevices')
-    let userDevicesFilter = userDevices
         .where('userHandle', '==', req.user.userHandle)
         .where('deviceId', '==', req.params.deviceId)
         .limit(1)
@@ -103,7 +102,7 @@ exports.postInUserDevices = (req, res) => {
             if (!data.empty) {
                 return res.status(404).json({ error: 'Adventure already yours' });
             } else {
-                let subCollectionDataSetModel;
+                
                 db
                     .doc(`/devices/${req.params.deviceId}`)
                     .get()
@@ -113,32 +112,111 @@ exports.postInUserDevices = (req, res) => {
                             nameOfDevice: doc.data().nameOfDevice,
                             createdAt: doc.data().createdAt,
                             ageRate: doc.data().ageRate,
+                            dataSets: doc.data().dataSets
                         };
-                        // save data set model for device
-                        subCollectionDataSetModel = doc.data().dataSets;
-                        // save select info of device without dataSets
-                        allUserAdventureData.device = selectInfoDevice;
+                        allUserDeviceData.device = selectInfoDevice;
                         // write in global object
-                        return userDevices.add(allUserDeviceData);   
+                        return db
+                        .collection('userDevices')
+                        .add(allUserDeviceData)  
                     })
-                    .then((doc) => {
-                        //return res.json(allUserDeviceData);
-                        return userDevicesFilter.doc(doc.id).collection('dataSets').add(subCollectionDataSetModel);
-                    })
+                    .then(() => {
+                        return res.json(allUserDeviceData);
+                    }) 
                     .catch((err) => {
                         console.error(err);
                         res.status(500).json({ error: err.code });
                     });
             }
         })
-        .then(() => {
-            return res.json(allUserDeviceData);
-        })            
         .catch((err) => {
             console.error(err);
             res.status(500).json({ error: err.code });
         });
 };
+
+// post in dataSets in user devices
+exports.postInDataSetsUserDevice = (req, res) => {
+    const dataSet = {   
+        on: req.body.on,
+        connected: req.body.connected,
+        createdAt: new Date().toISOString(),
+        tail: {
+            proximity: req.body.tail.proximity,
+            temperature: req.body.tail.temperature,
+            pressure: req.body.tail.pressure,
+            motion: req.body.tail.motion,
+            position: {
+                x: req.body.tail.position.x,
+                y: req.body.tail.position.y,
+                z: req.body.tail.position.z
+            }
+        },
+        midi: {
+            color: req.body.midi.color,
+            speakers: req.body.midi.speakers,
+            mic: req.body.midi.mic,
+            lights: req.body.midi.lights,
+            vibration: req.body.midi.vibration
+        }
+    }
+
+    db
+        .doc(`/userDevices/${req.params.userDevicesId}`)
+        .collection('dataSets')
+        .add(dataSet)
+        .then(() => {
+            return res.json(dataSet);
+        })            
+        .catch((err) => {
+            console.error(err);
+            res.status(500).json({ error: err.code });
+        });
+}
+
+// get all dataSets in user device 
+exports.getAllDataSetsUserDevice = (req, res) => {
+    db
+        .doc(`/userDevices/${req.params.userDevicesId}`)
+        .collection('dataSets')
+        .get()
+        .then((data) => {
+            let dataSets = [];
+            data.forEach((doc) => {
+                dataSets.push({
+                    dataSetsId: doc.id,
+                    on: doc.data().on,
+                    connected: doc.data().connected,
+                    createdAt: new Date().toISOString(),
+                    tail: {
+                        proximity: doc.data().tail.proximity,
+                        temperature: doc.data().tail.temperature,
+                        pressure: doc.data().tail.pressure,
+                        motion: doc.data().tail.motion,
+                        position: {
+                            x: doc.data().tail.position.x,
+                            y: doc.data().tail.position.y,
+                            z: doc.data().tail.position.z
+                        }
+                    },
+                    midi: {
+                        color: doc.data().midi.color,
+                        speakers: doc.data().midi.speakers,
+                        mic: doc.data().midi.mic,
+                        lights: doc.data().midi.lights,
+                        vibration: doc.data().midi.vibration
+                    }
+                });
+            });
+            return res.json(dataSets);
+        })
+        .catch((err) => console.error(err));   
+}
+
+// get one dataSets in user device
+exports.getDataSetUserDevice = (req, res) => {
+
+}
 
 // post active device
 exports.postInActiveUserDevice = (req, res) => {
@@ -238,39 +316,39 @@ exports.unlikeDevice = (req, res) => {
     .where('deviceId', '==', req.params.deviceId)
     .limit(1);
 
-const deviceDocument = db.doc(`/devices/${req.params.deviceId}`);
-let deviceData;
-deviceDocument
-    .get()
-    .then((doc) => {
-        if (doc.exists) {
-            deviceData = doc.data();
-            deviceData.deviceId = doc.id;
-            return likeDocument.get();
-        } else {
-            return res.status(404).json({ error: 'Device not found' });
-        }
-    })
-    .then((data) => {
-        if (data.empty) {
-            return res.status(400).json({ error: 'Device not liked' });
-        } else {
-            return db
-                .doc(`/likes/${data.docs[0].id}`)
-                .delete()
-                .then(() => {
-                    deviceData.likesCount--;
-                    return deviceDocument.update({ likesCount: deviceData.likesCount });
-                })
-                .then(() => {
-                    res.json(deviceData);
-                });
-        }
-    })
-    .catch((err) => {
-        console.error(err);
-        res.status(500).json({ error: err.code });
-    });   
+    const deviceDocument = db.doc(`/devices/${req.params.deviceId}`);
+    let deviceData;
+    deviceDocument
+        .get()
+        .then((doc) => {
+            if (doc.exists) {
+                deviceData = doc.data();
+                deviceData.deviceId = doc.id;
+                return likeDocument.get();
+            } else {
+                return res.status(404).json({ error: 'Device not found' });
+            }
+        })
+        .then((data) => {
+            if (data.empty) {
+                return res.status(400).json({ error: 'Device not liked' });
+            } else {
+                return db
+                    .doc(`/likes/${data.docs[0].id}`)
+                    .delete()
+                    .then(() => {
+                        deviceData.likesCount--;
+                        return deviceDocument.update({ likesCount: deviceData.likesCount });
+                    })
+                    .then(() => {
+                        res.json(deviceData);
+                    });
+            }
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).json({ error: err.code });
+        });   
 }
 
 // Comment on a device

@@ -8,7 +8,7 @@ module.exports = (req,res,next) => {
         idToken = req.headers.authorization.split('Bearer ')[1];
     } else {
         console.error('No token found');
-        return res.status(403).json({ body: 'Body must not be empty' });
+        return res.status(403).json({ Token: 'Body must not be empty' });
     }
 
     // check if the token in the request is provide for us

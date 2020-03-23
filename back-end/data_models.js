@@ -73,6 +73,7 @@ let db = {
     // post a user device ***
     // app.post('/user-devices', FBAuth, postUserDevices); or 
     // app.post('/user/:deviceId/buy-device', FBAuth, postInUserDevices); ***
+    // get a user device
 
     // post active device ***
     // app.post('/user-device/:deviceId/active', FBAuth, postActiveUserDevice); or
@@ -80,6 +81,11 @@ let db = {
 
     // post inactive device ***
     // app.post('/user/device/:userDevicesId/inactive', FBAuth, postInInactiveUserDevice);
+
+    // post dataSets in user device
+    // app.post('/user/device/:userDevicesId/dataset', FBAuth, postInDataSetsUserDevices);
+    // get all dataSets in user device
+    // get one dataSet in user device
 
     userDevices: [
         {   
@@ -100,7 +106,7 @@ let db = {
                         connected: false,
                         createdAt: '2019-03-15T10:59:52.798Z',
                         tail: {
-                            proximity: false,
+                            proximity: 0,
                             temperature: 0,
                             pressure: 0,
                             motion: 0,

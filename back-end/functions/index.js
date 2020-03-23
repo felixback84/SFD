@@ -28,7 +28,10 @@ const {
     postInInactiveUserDevice,
     likeDevice,
     unlikeDevice,
-    postDeviceComment
+    postDeviceComment,
+    postInDataSetsUserDevice,
+    getAllDataSetsUserDevice,
+    getDataSetUserDevice
 } = require('./handlers/devices');
 
 // adventures
@@ -64,9 +67,18 @@ app.get('/user', FBAuth, getAuthenticatedUser);
 app.get('/devices', getAllDevices);
 // get one device:pub
 app.get('/devices/:deviceId', getDevice);
-
 // post a user device
 app.post('/user/:deviceId/buy-device', FBAuth, postInUserDevices);
+// get userDevice *** with auth user
+//// yaaaa
+
+// post dataSets in user device
+app.post('/user/device/:userDevicesId/dataset', FBAuth, postInDataSetsUserDevice);
+// get all dataSets in user device 
+app.get('/user/device/:userDevicesId/datasets', FBAuth, getAllDataSetsUserDevice);
+// get one dataSets in user device
+app.get('/user/device/:userDevicesId/datasets/:dataSetsId', FBAuth, getDataSetUserDevice);
+
 // post active device
 app.post('/user/device/:userDevicesId/active', FBAuth, postInActiveUserDevice);
 // post inactive device
@@ -88,6 +100,9 @@ app.get('/adventures/:adventureId', getAdventure);
 
 // post a user adventure
 app.post('/user/:adventureId/buy-adventure', FBAuth, postInUserAdventures);
+// get userAdventure *** with auth user
+///// yaaa
+
 // post active adventure
 app.post('/user/adventure/:userAdventuresId/active', FBAuth, postInActiveUserAdventure);
 // post inactive adventure
