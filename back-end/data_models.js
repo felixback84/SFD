@@ -82,10 +82,12 @@ let db = {
     // post inactive device ***
     // app.post('/user/device/:userDevicesId/inactive', FBAuth, postInInactiveUserDevice);
 
-    // post dataSets in user device
+    // post dataSets in user device ***
     // app.post('/user/device/:userDevicesId/dataset', FBAuth, postInDataSetsUserDevices);
-    // get all dataSets in user device
-    // get one dataSet in user device
+    // get all dataSets in user device ***
+    // app.get('/user/device/:userDevicesId/datasets', FBAuth, getAllDataSetsUserDevice);
+    // get one dataSet in user device ***
+    // app.get('/user/device/:userDevicesId/datasets/:dataSetsId', FBAuth, getDataSetUserDevice);
 
     userDevices: [
         {   

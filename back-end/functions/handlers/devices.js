@@ -215,7 +215,22 @@ exports.getAllDataSetsUserDevice = (req, res) => {
 
 // get one dataSets in user device
 exports.getDataSetUserDevice = (req, res) => {
-
+    
+    let messageRef = db
+        .collection('userDevices')
+        .doc(req.params.userDevicesId)
+        .collection('dataSets')
+        .doc(req.params.dataSetsId)
+        .get()
+        .then((doc) => {
+            let dataSet = doc.data();
+            console.log(dataSet);
+            return res.json(dataSet);
+        })
+        .catch((err) => {
+                console.error(err);
+                res.status(500).json({ error: err.code });
+        });
 }
 
 // post active device

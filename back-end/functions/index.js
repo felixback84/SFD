@@ -77,7 +77,7 @@ app.post('/user/device/:userDevicesId/dataset', FBAuth, postInDataSetsUserDevice
 // get all dataSets in user device 
 app.get('/user/device/:userDevicesId/datasets', FBAuth, getAllDataSetsUserDevice);
 // get one dataSets in user device
-app.get('/user/device/:userDevicesId/datasets/:dataSetsId', FBAuth, getDataSetUserDevice);
+app.get('/user/device/:userDevicesId/dataset/:dataSetsId', FBAuth, getDataSetUserDevice);
 
 // post active device
 app.post('/user/device/:userDevicesId/active', FBAuth, postInActiveUserDevice);
