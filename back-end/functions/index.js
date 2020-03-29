@@ -16,7 +16,7 @@ const {
     login,
     addUserDetails,
     uploadUserImage,
-    getAuthenticatedUser 
+    getAuthenticatedUser
 } = require('./handlers/users');
 
 // devices
@@ -31,7 +31,8 @@ const {
     postDeviceComment,
     postInDataSetsUserDevice,
     getAllDataSetsUserDevice,
-    getDataSetUserDevice
+    getDataSetUserDevice,
+    postDataCheckOutDevice
 } = require('./handlers/devices');
 
 // adventures
@@ -51,15 +52,15 @@ const {
 
 ///////////////// API REST ROUTES //////////////
 // USERS
-//signup user
+// signup user
 app.post('/signup', signup);
-//login user
+// login user
 app.post('/login', login);
-//add user details
+// add user details
 app.post('/user', FBAuth, addUserDetails);
-//post image of user
+// post image of user
 app.post('/user/image', FBAuth, uploadUserImage);
-//get all own user data (auth)
+// get all own user data (auth)
 app.get('/user', FBAuth, getAuthenticatedUser);
 
 // DEVICES
@@ -71,6 +72,9 @@ app.get('/devices/:deviceId', getDevice);
 app.post('/user/:deviceId/buy-device', FBAuth, postInUserDevices);
 // get userDevice *** with auth user
 //// yaaaa
+
+// post data for checkout to after post in userDevices
+app.post('/user/checkout/device/:deviceId',FBAuth, postDataCheckOutDevice)
 
 // post dataSets in user device
 app.post('/user/device/:userDevicesId/dataset', FBAuth, postInDataSetsUserDevice);
@@ -91,6 +95,7 @@ app.get('/device/:deviceId/unlike', FBAuth, unlikeDevice);
 
 // comment on device
 app.post('/device/:deviceId/comment', FBAuth, postDeviceComment);
+
 
 // ADVENTURES
 // get all adventures

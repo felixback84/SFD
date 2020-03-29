@@ -135,6 +135,101 @@ exports.postInUserDevices = (req, res) => {
         });
 };
 
+// checkOuts: {
+
+// checkout    
+
+//     checkOutsId: 'uyndnweuewgiuwehfh8wu',
+//     createdAt: '2019-03-15T10:59:52.798Z',
+//     type: 'device | adventure',
+//     state:'pending | delivery | finish',
+//     plastic:'**********2356',
+
+// user
+
+//     userHandle: 'CarlosTal84',
+//     names: 'Carlos Alberto',
+//     lastname: 'Talero Jaocme',
+//     email: 'carlos.talero.jacome@gmail.com',
+
+// form
+
+//     city: 'Bogotá D.C',
+//     addressToDelivery: 'Av 14 47 - 39 Apto 212-A',
+
+// device or adventure
+
+//     deviceId: 'MZInC971tJYurv3OYzjR',
+//     adventureId: null,
+//     title: null,
+//     nameOfDevice: 'Halo'
+// },
+
+// post data for checkout to post in userDevices or userAdventures
+exports.postDataCheckOutDevice = (req, res) => {
+
+    // global var
+    let dataCheckout = {};
+
+    // put addiotional info for checkout
+    let checkoutData = {
+        createdAt: new Date().toISOString(),
+        type: 'device',
+        state:'pending'
+    }
+    dataCheckout = checkoutData;
+    
+    // address
+    const newUserAdressToDelivery = {
+        city: req.body.city,
+        addressToDelivery: req.body.addressToDelivery,
+        plastic: req.body.plastic
+    };
+
+    // add address to global var
+    dataCheckout.address = newUserAdressToDelivery;
+    //console.log(dataCheckout);
+    // ask for user data
+    db
+        .doc(`/users/${req.user.userHandle}`)
+        .get()
+        .then((doc) => {
+            let userDataFilter = {
+                userHandle: doc.data().userHandle,
+                names: doc.data().names,
+                lastname: doc.data().lastname,
+                email: doc.data().email
+            }
+            //console.log('user:' + dataCheckout);
+            dataCheckout.user = userDataFilter;
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).json({ error: err.code });
+        });
+    // ask for device info
+    db
+    .doc(`/devices/${req.params.deviceId}`)
+    .get()
+    .then((doc) => {
+        let deviceDataFilter = {
+            deviceId: req.params.deviceId,
+            nameOfDevice: doc.data().nameOfDevice
+        };
+            dataCheckout.device = deviceDataFilter;
+            //console.log(dataCheckout);
+            console.log(dataCheckout);
+            // add final object in db
+            db.collection('checkouts').add(dataCheckout);
+            // send response from server
+            return res.json('done with the checkout');
+    })
+    .catch((err) => {
+        console.error(err);
+        res.status(500).json({ error: err.code });
+    });
+}
+
 // post in dataSets in user devices
 exports.postInDataSetsUserDevice = (req, res) => {
     const dataSet = {   

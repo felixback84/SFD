@@ -37,6 +37,10 @@ let db = {
     // post a user adventure ***
     // app.post('/user-adventures', FBAuth, postUserAdventure); or 
     // app.post('/user/:adventureId/buy-adventure', FBAuth, postInUserAdventures); ***
+    // get in userAuth
+    // or
+    // function after creation of checkout
+
 
     // post active adventure ***
     // app.post('/user-adventures/:adventureId/active', FBAuth, postActiveUserAdventure); or 
@@ -44,6 +48,9 @@ let db = {
 
     // post inactive adventure ***
     // app.post('/user/adventure/:userAdventuresId/inactive', FBAuth, postInInactiveUserAdventure);
+    // get to know
+    // or
+    // make a collection for activeAdventures
 
     userAdventures: [
         {   
@@ -73,7 +80,9 @@ let db = {
     // post a user device ***
     // app.post('/user-devices', FBAuth, postUserDevices); or 
     // app.post('/user/:deviceId/buy-device', FBAuth, postInUserDevices); ***
-    // get a user device
+    // get in userAuth
+    // or
+    // function after creation of checkout
 
     // post active device ***
     // app.post('/user-device/:deviceId/active', FBAuth, postActiveUserDevice); or
@@ -81,6 +90,9 @@ let db = {
 
     // post inactive device ***
     // app.post('/user/device/:userDevicesId/inactive', FBAuth, postInInactiveUserDevice);
+    // get to know
+    // or
+    // make a collection for activeDevices
 
     // post dataSets in user device ***
     // app.post('/user/device/:userDevicesId/dataset', FBAuth, postInDataSetsUserDevices);
@@ -101,7 +113,9 @@ let db = {
                 createdAt: '2019-03-15T10:59:52.798Z',
                 ageRate: '4 to 8 years',
             },
-            dataSets:  // sub - collection in userDevices post not get
+            // sub - collection in userDevices for post(data mini servers) ang get (keyids), 
+            // to list keyIds ang fill with mini servers data (keyValues)
+            dataSets:  
                 [
                     {   
                         on: false,
@@ -130,6 +144,27 @@ let db = {
         }
     ],
 
+    // post data for checkout for after post the property in userDevices or userAdventures
+    // app.post('/user/checkout/device/:deviceId',FBAuth, postDataCheckOutDevice);
+    // app.post('/user/checkout/adventure/:adventureId',FBAuth, postDataCheckOutAdventure);
+    // get data for list of buyes
+
+    checkOuts: {
+        checkOutsId: 'pzdTQLfRpS4FfNTXeisH',
+        createdAt: '2019-03-15T10:59:52.798Z',
+        type: 'device | adventure',
+        state:'pending | delivery | finish',
+        plastic:'**********2356',
+        userHandle: 'CarlosTal84',
+        names: 'Carlos Alberto',
+        lastname: 'Talero Jaocme',
+        city: 'Bogotá D.C',
+        addressToDelivery: 'Av 14 47 - 39 Apto 212-A',
+        deviceId: null,
+        adventureId: '3vvH32idn5cGF0BESWVl',
+        title: 'Wild spaces adventures'
+    },
+
     // get all adventures ***
     // app.get('/adventures', getAllAdventures);
 
@@ -142,6 +177,7 @@ let db = {
             title: 'Wild spaces adventures',
             description: 'hello from description of the adventure',
             imageUrl: 'image/dsfsdkfghskdfgs/dgfdhfgdh',
+            videoUrl: 'https://www.youtube.com/asderfihiowwp',
             createdAt: '2019-03-15T10:59:52.798Z',
             price: 19.99,
             duration: 60,
@@ -163,6 +199,8 @@ let db = {
         {
             deviceId: 'MZInC971tJYurv3OYzjR',
             nameOfDevice: 'halo',
+            imageUrl: 'image/dsfsdkfghskdfgs/dgfdhfgdh',
+            videoUrl: 'https://www.youtube.com/asderfihiowwp',
             createdAt: '2019-03-15T10:59:52.798Z',
             price: 199.99,
             ageRate: '4 to 8 years',
