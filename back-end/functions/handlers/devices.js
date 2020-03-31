@@ -13,11 +13,15 @@ exports.getAllDevices = (req,res) => {
                 devices.push({
                     deviceId: doc.id,
                     nameOfDevice: doc.data().nameOfDevice,
+                    imgUrl: doc.data().imgUrl,
+                    videoUrl: doc.data().vieoUrl,
+                    badgeUrl: doc.data().badgeUrl,
                     createdAt: doc.data().createdAt,
                     price: doc.data().price,
                     ageRate: doc.data().ageRate,
                     likesCount: doc.data().likesCount,
-                    commentsCount: doc.data().commentsCount
+                    commentsCount: doc.data().commentsCount,
+                    howManyAdventures: doc.data().howManyAdventures
                 });
             });
             return res.json(devices);
@@ -50,13 +54,11 @@ exports.getDevice = (req, res) => {
             });
             // return res.json(deviceData);
         })
+    // ask for likes - check if this is usefull in ux    
     db
         .doc(`/devices/${req.params.deviceId}`)
         .get()
         .then((doc) => {
-            // if (!doc.exists) {
-            //     return res.status(404).json({ error: 'Device not found' });
-            // }
             deviceData = doc.data();
             deviceData.deviceId = doc.id;
             return db
@@ -135,37 +137,7 @@ exports.postInUserDevices = (req, res) => {
         });
 };
 
-// checkOuts: {
-
-// checkout    
-
-//     checkOutsId: 'uyndnweuewgiuwehfh8wu',
-//     createdAt: '2019-03-15T10:59:52.798Z',
-//     type: 'device | adventure',
-//     state:'pending | delivery | finish',
-//     plastic:'**********2356',
-
-// user
-
-//     userHandle: 'CarlosTal84',
-//     names: 'Carlos Alberto',
-//     lastname: 'Talero Jaocme',
-//     email: 'carlos.talero.jacome@gmail.com',
-
-// form
-
-//     city: 'Bogotá D.C',
-//     addressToDelivery: 'Av 14 47 - 39 Apto 212-A',
-
-// device or adventure
-
-//     deviceId: 'MZInC971tJYurv3OYzjR',
-//     adventureId: null,
-//     title: null,
-//     nameOfDevice: 'Halo'
-// },
-
-// post data for checkout to post in userDevices or userAdventures
+// post data for checkout to post in userDevices
 exports.postDataCheckOutDevice = (req, res) => {
 
     // global var
@@ -214,7 +186,8 @@ exports.postDataCheckOutDevice = (req, res) => {
     .then((doc) => {
         let deviceDataFilter = {
             deviceId: req.params.deviceId,
-            nameOfDevice: doc.data().nameOfDevice
+            nameOfDevice: doc.data().nameOfDevice,
+            price: doc.data().price
         };
             dataCheckout.device = deviceDataFilter;
             //console.log(dataCheckout);
@@ -330,43 +303,142 @@ exports.getDataSetUserDevice = (req, res) => {
 
 // post active device
 exports.postInActiveUserDevice = (req, res) => {
-    db
-        .doc(`/userDevices/${req.params.userDevicesId}`)
+    // db
+    //     .doc(`/userDevices/${req.params.userDevicesId}`)
+    //     .get()
+    //     .then((doc) => {
+    //         if (!doc.exists) {
+    //             return res.status(404).json({ error: 'user device not found' });
+    //         }
+    //         return doc.ref.update({ active: true });
+    //     })
+    //     .then(() => {
+    //         res.json({ message: 'Device active' });
+    //     })
+    //     .catch((err) => {
+    //         res.status(500).json({ error: 'something went wrong' });
+    //         console.error(err);
+    //     }); 
+}  
+
+// get active device
+exports.getActiveUserDevices = (req, res) => {
+    const activeUserDeviceDocument = db
+        .collection('activeUserDevices')
+        .where('userHandle', '==', req.user.userHandle)
+        .where('userDevicesId', '==', req.params.userDevicesId)
+        .limit(1);
+
+    // ask for device
+    const userDeviceDocument = db.doc(`/userDevices/${req.params.userDevicesId}`); 
+    // global var to hold all data
+    let userDeviceData;
+    // ask if exists this device
+    userDeviceDocument
         .get()
         .then((doc) => {
-            if (!doc.exists) {
-                return res.status(404).json({ error: 'user device not found' });
+            if (doc.exists) {
+                userDeviceData = doc.data();
+                userDeviceData.userDevicesId = doc.id;
+                return activeUserDeviceDocument.get();
+            } else {
+                return res.status(404).json({ error: 'userDevice not found' });
             }
-            return doc.ref.update({ active: true });
         })
-        .then(() => {
-            res.json({ message: 'Device active' });
+        // check if is empty this kind of item in the activeDevices collection
+        .then((data) => {
+            if (data.empty) {
+              //console.log(data);
+                return db
+                    // add data to it
+                    .collection('activeUserDevices')
+                    .add({
+                        userDevicesId: req.params.userDevicesId,
+                        userHandle: req.user.userHandle
+                    })
+                    .then(() => {
+                        return userDeviceDocument.update({ active: true });
+                    })
+                    // data in response to check in front if the likes exists
+                    .then(() => {
+                        //console.log(res);
+                        console.log(userDeviceData);
+                        return res.json(userDeviceData);
+                    
+                    });
+            } else {
+                return res.status(400).json({ error: 'userDevice already active' });
+            }
         })
         .catch((err) => {
-            res.status(500).json({ error: 'something went wrong' });
             console.error(err);
-        }); 
-}  
+            res.status(500).json({ error: err.code });
+        });   
+
+    
+}
 
 // post inactive device
 exports.postInInactiveUserDevice = (req, res) => {
-    db
-        .doc(`/userDevices/${req.params.userDevicesId}`)
+    // db
+    //     .doc(`/userDevices/${req.params.userDevicesId}`)
+    //     .get()
+    //     .then((doc) => {
+    //         if (!doc.exists) {
+    //             return res.status(404).json({ error: 'user device not found' });
+    //         }
+    //         return doc.ref.update({ active: false });
+    //     })
+    //     .then(() => {
+    //         res.json({ message: 'Device Inactive' });
+    //     })
+    //     .catch((err) => {
+    //         res.status(500).json({ error: 'something went wrong' });
+    //         console.error(err);
+    //     }); 
+}  
+
+// get inactive device
+exports.getInactiveUserDevices = (req, res) => {
+    const activeUserDeviceDocument = db
+            .collection('activeUserDevices')
+            .where('userHandle', '==', req.user.userHandle)
+            .where('userDevicesId', '==', req.params.userDevicesId)
+            .limit(1);
+
+    const userDeviceDocument = db.doc(`/userDevices/${req.params.userDevicesId}`);
+    let userDeviceData;
+    userDeviceDocument
         .get()
         .then((doc) => {
-            if (!doc.exists) {
-                return res.status(404).json({ error: 'user device not found' });
+            if (doc.exists) {
+                userDeviceData = doc.data();
+                userDeviceData.userDevicesId = doc.id;
+                return activeUserDeviceDocument.get();
+            } else {
+                return res.status(404).json({ error: 'userDevice not found' });
             }
-            return doc.ref.update({ active: false });
         })
-        .then(() => {
-            res.json({ message: 'Device Inactive' });
+        .then((data) => {
+            if (data.empty) {
+                return res.status(400).json({ error: 'Device not active' });
+            } else {
+                return db
+                    .doc(`/activeUserDevices/${data.docs[0].id}`)
+                    .delete()
+                    .then(() => {
+                        return userDeviceDocument.update({ active: false });
+                    })
+                    .then(() => {
+                        res.json(userDeviceData);
+                    });
+            }
         })
         .catch((err) => {
-            res.status(500).json({ error: 'something went wrong' });
             console.error(err);
-        }); 
-}  
+            res.status(500).json({ error: err.code });
+        });   
+}
 
 // Like a device
 exports.likeDevice = (req, res) => {
@@ -404,8 +476,6 @@ exports.likeDevice = (req, res) => {
                         return deviceDocument.update({ likesCount: deviceData.likesCount });
                     })
                     .then(() => {
-                        //console.log(res);
-                        //console.log(deviceData);
                         return res.json(deviceData);
                     });
             } else {
@@ -421,10 +491,10 @@ exports.likeDevice = (req, res) => {
 // Unlike a device
 exports.unlikeDevice = (req, res) => { 
     const likeDocument = db
-    .collection('likes')
-    .where('userHandle', '==', req.user.userHandle)
-    .where('deviceId', '==', req.params.deviceId)
-    .limit(1);
+        .collection('likes')
+        .where('userHandle', '==', req.user.userHandle)
+        .where('deviceId', '==', req.params.deviceId)
+        .limit(1);
 
     const deviceDocument = db.doc(`/devices/${req.params.deviceId}`);
     let deviceData;

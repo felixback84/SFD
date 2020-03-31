@@ -15,6 +15,7 @@ exports.getAllAdventures = (req,res) => {
                     title: doc.data().title,
                     description: doc.data().description,
                     imgUrl: doc.data().imgUrl,
+                    videoUrl: doc.data().videoUrl,
                     createdAt: doc.data().createdAt,
                     price: doc.data().price,
                     duration: doc.data().duration,
@@ -22,7 +23,11 @@ exports.getAllAdventures = (req,res) => {
                     language: doc.data().language,
                     audioUrl: doc.data().audioUrl,
                     likesCount: doc.data().likesCount,
-                    commentsCount: doc.data().commentsCount
+                    commentsCount: doc.data().commentsCount,
+                    device: {
+                        nameOfDevice: doc.data().device.nameOfDevice,
+                        badgeUrl: doc.data().device.badgeUrl
+                    }
                 });
             });
             return res.json(adventures);
@@ -55,13 +60,11 @@ exports.getAdventure = (req, res) => {
             });
             // return res.json(deviceData);
         })
+    // ask for likes - check if this is usefull in ux
     db
         .doc(`/adventures/${req.params.adventureId}`)
         .get()
         .then((doc) => {
-            // if (!doc.exists) {
-            //     return res.status(404).json({ error: 'Device not found' });
-            // }
             adventureData = doc.data();
             adventureData.adventureId = doc.id;
             return db
@@ -145,6 +148,72 @@ exports.postInUserAdventures = (req, res) => {
     });
 }    
 
+// post data for checkout to post in userAdventures
+exports.postDataCheckOutAdventure = (req, res) => {
+
+    // global var
+    let dataCheckout = {};
+
+    // put addiotional info for checkout
+    let checkoutData = {
+        createdAt: new Date().toISOString(),
+        type: 'adventure',
+        state:'pending'
+    }
+    dataCheckout = checkoutData;
+    
+    // address
+    const newUserAdressToDelivery = {
+        city: req.body.city,
+        addressToDelivery: req.body.addressToDelivery,
+        plastic: req.body.plastic
+    };
+
+    // add address to global var
+    dataCheckout.address = newUserAdressToDelivery;
+    //console.log(dataCheckout);
+    // ask for user data
+    db
+        .doc(`/users/${req.user.userHandle}`)
+        .get()
+        .then((doc) => {
+            let userDataFilter = {
+                userHandle: doc.data().userHandle,
+                names: doc.data().names,
+                lastname: doc.data().lastname,
+                email: doc.data().email
+            }
+            //console.log('user:' + dataCheckout);
+            dataCheckout.user = userDataFilter;
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).json({ error: err.code });
+        });
+    // ask for adventure info
+    db
+    .doc(`/adventures/${req.params.adventureId}`)
+    .get()
+    .then((doc) => {
+        let adventureDataFilter = {
+            adventureId: req.params.adventureId,
+            title: doc.data().title,
+            price: doc.data().price
+        };
+            dataCheckout.adventure = adventureDataFilter;
+            //console.log(dataCheckout);
+            console.log(dataCheckout);
+            // add final object in db
+            db.collection('checkouts').add(dataCheckout);
+            // send response from server
+            return res.json('done with the checkout');
+    })
+    .catch((err) => {
+        console.error(err);
+        res.status(500).json({ error: err.code });
+    });
+}
+
 // post active adventure
 exports.postInActiveUserAdventure = (req, res) => {
     db
@@ -221,8 +290,6 @@ exports.likeAdventure = (req, res) => {
                         return adventureDocument.update({ likesCount: adventureData.likesCount });
                     })
                     .then(() => {
-                        //console.log(res);
-                        //console.log(deviceData);
                         return res.json(adventureData);
                     });
             } else {
@@ -312,6 +379,7 @@ exports.postAdventureComment = (req, res) => {
         });
 };
 
+////////////////////////////// not yet works //////////
 // get all favorite content
 exports.getFavoritesUserAdventures = (req, res) => {
     db

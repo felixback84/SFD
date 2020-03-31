@@ -93,6 +93,7 @@ let db = {
     // get to know
     // or
     // make a collection for activeDevices
+    // getActiveUserDevice and getInactiveUserDevice ***
 
     // post dataSets in user device ***
     // app.post('/user/device/:userDevicesId/dataset', FBAuth, postInDataSetsUserDevices);
@@ -155,14 +156,20 @@ let db = {
         type: 'device | adventure',
         state:'pending | delivery | finish',
         plastic:'**********2356',
-        userHandle: 'CarlosTal84',
-        names: 'Carlos Alberto',
-        lastname: 'Talero Jaocme',
-        city: 'Bogotá D.C',
-        addressToDelivery: 'Av 14 47 - 39 Apto 212-A',
-        deviceId: null,
-        adventureId: '3vvH32idn5cGF0BESWVl',
-        title: 'Wild spaces adventures'
+        user: {
+            userHandle: 'CarlosTal84',
+            names: 'Carlos Alberto',
+            lastname: 'Talero Jaocme'
+        },
+        address: {
+            city: 'Bogotá D.C',
+            addressToDelivery: 'Av 14 47 - 39 Apto 212-A',
+        },
+        adventure:{
+            adventureId: '3vvH32idn5cGF0BESWVl',
+            title: 'Wild spaces adventures',
+            price: 29.99
+        }   
     },
 
     // get all adventures ***
@@ -185,7 +192,11 @@ let db = {
             language: ['english'], 
             audioUrl: 'audio/dsfsdkfghskdfgs/dgfdhfgdh',
             likesCount: 2,
-            commentsCount: 3
+            commentsCount: 3,
+            device: {
+                nameOfDevice: 'halo',
+                badgeUrl: 'image/dsfsdkfghskdfgs/dgfdhfgdh'
+            }
         }
     ],
 
@@ -201,11 +212,13 @@ let db = {
             nameOfDevice: 'halo',
             imageUrl: 'image/dsfsdkfghskdfgs/dgfdhfgdh',
             videoUrl: 'https://www.youtube.com/asderfihiowwp',
+            badgeUrl: 'image/dsfsdkfghskdfgs/dgfdhfgdh',
             createdAt: '2019-03-15T10:59:52.798Z',
             price: 199.99,
             ageRate: '4 to 8 years',
             likesCount: 2,
             commentsCount: 3,
+            howManyAdevntures: 1,
             dataSets:  // exe object to design the sub - collection in userDevices
                 {   
                     dataSetsId: 'MZInC971tJYurv3OYzjR',

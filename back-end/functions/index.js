@@ -24,6 +24,7 @@ const {
     getAllDevices,
     getDevice,
     postInUserDevices,
+    postDataCheckOutDevice,
     postInActiveUserDevice,
     postInInactiveUserDevice,
     likeDevice,
@@ -31,8 +32,7 @@ const {
     postDeviceComment,
     postInDataSetsUserDevice,
     getAllDataSetsUserDevice,
-    getDataSetUserDevice,
-    postDataCheckOutDevice
+    getDataSetUserDevice
 } = require('./handlers/devices');
 
 // adventures
@@ -40,6 +40,7 @@ const {
     getAllAdventures,
     getAdventure,
     postInUserAdventures,
+    postDataCheckOutAdventure,
     postInActiveUserAdventure,
     postInInactiveUserAdventure,
     likeAdventure,
@@ -83,9 +84,9 @@ app.get('/user/device/:userDevicesId/datasets', FBAuth, getAllDataSetsUserDevice
 // get one dataSets in user device
 app.get('/user/device/:userDevicesId/dataset/:dataSetsId', FBAuth, getDataSetUserDevice);
 
-// post active device
+// post active device - sirve pero debe ser como los likes
 app.post('/user/device/:userDevicesId/active', FBAuth, postInActiveUserDevice);
-// post inactive device
+// post inactive device - sirve pero debe ser como los likes
 app.post('/user/device/:userDevicesId/inactive', FBAuth, postInInactiveUserDevice);
 
 // like for device
@@ -95,7 +96,6 @@ app.get('/device/:deviceId/unlike', FBAuth, unlikeDevice);
 
 // comment on device
 app.post('/device/:deviceId/comment', FBAuth, postDeviceComment);
-
 
 // ADVENTURES
 // get all adventures
@@ -108,9 +108,12 @@ app.post('/user/:adventureId/buy-adventure', FBAuth, postInUserAdventures);
 // get userAdventure *** with auth user
 ///// yaaa
 
-// post active adventure
+// post data for checkout to after post in userAdventures
+app.post('/user/checkout/adventures/:adventureId',FBAuth, postDataCheckOutAdventure)
+
+// post active adventure - sirve pero debe ser como los likes
 app.post('/user/adventure/:userAdventuresId/active', FBAuth, postInActiveUserAdventure);
-// post inactive adventure
+// post inactive adventure - sirve pero debe ser como los likes
 app.post('/user/adventure/:userAdventuresId/inactive', FBAuth, postInInactiveUserAdventure);
 
 // likes
@@ -121,16 +124,14 @@ app.get('/adventure/:adventureId/unlike', FBAuth, unlikeAdventure);
 // comment on an adventure
 app.post('/adventure/:adventureId/comment', FBAuth, postAdventureComment);
 
-// get all favorite adventures
+// get all favorite adventures - sirve pero nop
 app.get('/favorite-content/adventures', FBAuth, getFavoritesUserAdventures);
 
-// favorites
+// favorites - nop
 app.get('/adventure/:adventureId/favorite', FBAuth, favoriteAdventure);
-// unfavorites
+// unfavorites - nop
 app.get('/adventure/:adventureId/unfavorite', FBAuth, unfavoriteAdventure);
-
 
 // expotrt functions
 exports.api = functions.https.onRequest(app);
-
 
