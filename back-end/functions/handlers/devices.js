@@ -102,7 +102,7 @@ exports.postInUserDevices = (req, res) => {
         .get()
         .then((data) => {
             if (!data.empty) {
-                return res.status(404).json({ error: 'Adventure already yours' });
+                return res.status(404).json({ error: 'Device already yours' });
             } else {
                 
                 db
@@ -374,8 +374,6 @@ exports.getActiveUserDevices = (req, res) => {
             console.error(err);
             res.status(500).json({ error: err.code });
         });   
-
-    
 }
 
 // post inactive device
@@ -408,6 +406,7 @@ exports.getInactiveUserDevices = (req, res) => {
 
     const userDeviceDocument = db.doc(`/userDevices/${req.params.userDevicesId}`);
     let userDeviceData;
+    
     userDeviceDocument
         .get()
         .then((doc) => {

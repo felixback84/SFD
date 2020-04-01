@@ -25,8 +25,8 @@ const {
     getDevice,
     postInUserDevices,
     postDataCheckOutDevice,
-    postInActiveUserDevice,
-    postInInactiveUserDevice,
+    getActiveUserDevices,
+    getInactiveUserDevices,
     likeDevice,
     unlikeDevice,
     postDeviceComment,
@@ -41,8 +41,8 @@ const {
     getAdventure,
     postInUserAdventures,
     postDataCheckOutAdventure,
-    postInActiveUserAdventure,
-    postInInactiveUserAdventure,
+    getActiveUserAdventures,
+    getInactiveUserAdventures,
     likeAdventure,
     unlikeAdventure,
     postAdventureComment,
@@ -84,10 +84,15 @@ app.get('/user/device/:userDevicesId/datasets', FBAuth, getAllDataSetsUserDevice
 // get one dataSets in user device
 app.get('/user/device/:userDevicesId/dataset/:dataSetsId', FBAuth, getDataSetUserDevice);
 
-// post active device - sirve pero debe ser como los likes
-app.post('/user/device/:userDevicesId/active', FBAuth, postInActiveUserDevice);
-// post inactive device - sirve pero debe ser como los likes
-app.post('/user/device/:userDevicesId/inactive', FBAuth, postInInactiveUserDevice);
+// // post active device - sirve pero debe ser como los likes
+// app.post('/user/device/:userDevicesId/active', FBAuth, postInActiveUserDevice);
+// // post inactive device - sirve pero debe ser como los likes
+// app.post('/user/device/:userDevicesId/inactive', FBAuth, postInInactiveUserDevice);
+
+// get active userDevices 
+app.get('/userdevices/:userDevicesId/active', FBAuth, getActiveUserDevices);
+// get inactive userAdventures 
+app.get('/userdevices/:userDevicesId/inactive', FBAuth, getInactiveUserDevices);
 
 // like for device
 app.get('/device/:deviceId/like', FBAuth, likeDevice);
@@ -112,9 +117,14 @@ app.post('/user/:adventureId/buy-adventure', FBAuth, postInUserAdventures);
 app.post('/user/checkout/adventures/:adventureId',FBAuth, postDataCheckOutAdventure)
 
 // post active adventure - sirve pero debe ser como los likes
-app.post('/user/adventure/:userAdventuresId/active', FBAuth, postInActiveUserAdventure);
+// app.post('/user/adventure/:userAdventuresId/active', FBAuth, postInActiveUserAdventure);
 // post inactive adventure - sirve pero debe ser como los likes
-app.post('/user/adventure/:userAdventuresId/inactive', FBAuth, postInInactiveUserAdventure);
+// app.post('/user/adventure/:userAdventuresId/inactive', FBAuth, postInInactiveUserAdventure);
+
+// get active userAdventures 
+app.get('/useradventures/:userAdventuresId/active', FBAuth, getActiveUserAdventures);
+// get inactive userAdventures 
+app.get('/useradventures/:userAdventuresId/inactive', FBAuth, getInactiveUserAdventures);
 
 // likes
 app.get('/adventure/:adventureId/like', FBAuth, likeAdventure);
@@ -124,6 +134,7 @@ app.get('/adventure/:adventureId/unlike', FBAuth, unlikeAdventure);
 // comment on an adventure
 app.post('/adventure/:adventureId/comment', FBAuth, postAdventureComment);
 
+// not yet
 // get all favorite adventures - sirve pero nop
 app.get('/favorite-content/adventures', FBAuth, getFavoritesUserAdventures);
 
@@ -135,3 +146,64 @@ app.get('/adventure/:adventureId/unfavorite', FBAuth, unfavoriteAdventure);
 // expotrt functions
 exports.api = functions.https.onRequest(app);
 
+// NOTIFICATIONS FOR DB WITH SOME ACTIONS IN DB
+// after creation of checkout 'devices'
+exports.createNotificationOnLike = 
+    functions.firestore.document('checkouts/{id}').where('type','==','device')
+        .onCreate((snapshot) => {
+
+        let snapShotDeviceID = snapshot.data().device.deviceId;
+
+            const newUserDevice = {
+                deviceId: snapShotDeviceID,
+                userHandle: req.user.userHandle,
+                createdAt: new Date().toISOString(),
+                active: false
+            };
+
+            // object to hold all info, newUserDevice, deviceData
+            let allUserDeviceData = {};
+            allUserDeviceData = newUserDevice;
+
+            db
+            .collection('userDevices')
+            .where('userHandle', '==', req.user.userHandle)
+            .where('deviceId', '==', snapShotDeviceID)
+            .limit(1)
+            .get()
+            .then((data) => {
+                if (!data.empty) {
+                    return res.status(404).json({ error: 'Device already yours' });
+                } else {
+                    
+                    db
+                        .doc(`/devices/${req.params.snapShotDeviceID}`)
+                        .get()
+                        .then((doc) => {
+                            // now save the select info of .doc (device) of the collection
+                            let selectInfoDevice = {
+                                nameOfDevice: doc.data().nameOfDevice,
+                                createdAt: doc.data().createdAt,
+                                ageRate: doc.data().ageRate,
+                                dataSets: doc.data().dataSets
+                            };
+                            allUserDeviceData.device = selectInfoDevice;
+                            // write in global object
+                            return db
+                            .collection('userDevices')
+                            .add(allUserDeviceData)  
+                        })
+                        .then(() => {
+                            return res.json(allUserDeviceData);
+                        }) 
+                        // .catch((err) => {
+                        //     console.error(err);
+                        //     res.status(500).json({ error: err.code });
+                        // });
+                }
+            })
+            .catch((err) => {
+                console.error(err);
+                res.status(500).json({ error: err.code });
+            });
+        })

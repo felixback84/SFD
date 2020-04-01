@@ -215,44 +215,140 @@ exports.postDataCheckOutAdventure = (req, res) => {
 }
 
 // post active adventure
-exports.postInActiveUserAdventure = (req, res) => {
-    db
-        .doc(`/userAdventures/${req.params.userAdventuresId}`)
+// exports.postInActiveUserAdventure = (req, res) => {
+//     db
+//         .doc(`/userAdventures/${req.params.userAdventuresId}`)
+//         .get()
+//         .then((doc) => {
+//             if (!doc.exists) {
+//                 return res.status(404).json({ error: 'user adventure not found' });
+//             }
+//             return doc.ref.update({ active: true });
+//         })
+//         .then(() => {
+//             res.json({ message: 'Adventure active' });
+//         })
+//         .catch((err) => {
+//             res.status(500).json({ error: 'something went wrong' });
+//             console.error(err);
+//         }); 
+// }  
+
+exports.getActiveUserAdventures = (req, res) => {
+    const activeUserAdventureDocument = db
+        .collection('activeUserAdventures')
+        .where('userHandle', '==', req.user.userHandle)
+        .where('userAdventuresId', '==', req.params.userAdventuresId)
+        .limit(1);
+
+    // ask for device
+    const userAdventureDocument = db.doc(`/userAdventures/${req.params.userAdventuresId}`); 
+    // global var to hold all data
+    let userAdventureData;
+    // ask if exists this device
+    userAdventureDocument
         .get()
         .then((doc) => {
-            if (!doc.exists) {
-                return res.status(404).json({ error: 'user adventure not found' });
+            if (doc.exists) {
+                userAdventureData = doc.data();
+                userAdventureData.userAdventuresId = doc.id;
+                return activeUserAdventureDocument.get();
+            } else {
+                return res.status(404).json({ error: 'useAdventure not found' });
             }
-            return doc.ref.update({ active: true });
         })
-        .then(() => {
-            res.json({ message: 'Adventure active' });
+        // check if is empty this kind of item in the activeDevices collection
+        .then((data) => {
+            if (data.empty) {
+              //console.log(data);
+                return db
+                    // add data to it
+                    .collection('activeUserAdventures')
+                    .add({
+                        userAdventuresId: req.params.userAdventuresId,
+                        userHandle: req.user.userHandle
+                    })
+                    .then(() => {
+                        return userAdventureDocument.update({ active: true });
+                    })
+                    .then(() => {
+                        //console.log(res);
+                        console.log(userAdventureData);
+                        return res.json(useradventureData);
+                    
+                    });
+            } else {
+                return res.status(400).json({ error: 'userAdventure already active' });
+            }
         })
         .catch((err) => {
-            res.status(500).json({ error: 'something went wrong' });
             console.error(err);
-        }); 
-}  
+            res.status(500).json({ error: err.code });
+        });   
+}
 
 // post inactive adventure
-exports.postInInactiveUserAdventure = (req, res) => {
-    db
-        .doc(`/userAdventures/${req.params.userAdventuresId}`)
+// exports.postInInactiveUserAdventure = (req, res) => {
+//     db
+//         .doc(`/userAdventures/${req.params.userAdventuresId}`)
+//         .get()
+//         .then((doc) => {
+//             if (!doc.exists) {
+//                 return res.status(404).json({ error: 'user adventure not found' });
+//             }
+//             return doc.ref.update({ active: false });
+//         })
+//         .then(() => {
+//             res.json({ message: 'Adventure Inactive' });
+//         })
+//         .catch((err) => {
+//             res.status(500).json({ error: 'something went wrong' });
+//             console.error(err);
+//         }); 
+// } 
+
+// get inactive adventure
+exports.getInactiveUserAdventures = (req, res) => {
+    const activeUserAdventureDocument = db
+            .collection('activeUserAdventures')
+            .where('userHandle', '==', req.user.userHandle)
+            .where('userAdventuresId', '==', req.params.userAdventuresId)
+            .limit(1);
+
+    const userAdventuresDocument = db.doc(`/userAdventures/${req.params.userAdventuresId}`);
+    let userAdventuresData;
+    
+    userAdventuresDocument
         .get()
         .then((doc) => {
-            if (!doc.exists) {
-                return res.status(404).json({ error: 'user adventure not found' });
+            if (doc.exists) {
+                userAdventuresData = doc.data();
+                userAdventuresData.userAdventuresId = doc.id;
+                return activeUserAdventureDocument.get();
+            } else {
+                return res.status(404).json({ error: 'userAdventure not found' });
             }
-            return doc.ref.update({ active: false });
         })
-        .then(() => {
-            res.json({ message: 'Adventure Inactive' });
+        .then((data) => {
+            if (data.empty) {
+                return res.status(400).json({ error: 'Adventure not active' });
+            } else {
+                return db
+                    .doc(`/activeUserAdventures/${data.docs[0].id}`)
+                    .delete()
+                    .then(() => {
+                        return userAdventureDocument.update({ active: false });
+                    })
+                    .then(() => {
+                        res.json(userAdventureData);
+                    });
+            }
         })
         .catch((err) => {
-            res.status(500).json({ error: 'something went wrong' });
             console.error(err);
-        }); 
-} 
+            res.status(500).json({ error: err.code });
+        });   
+}
 
 // Like an adventure
 exports.likeAdventure = (req, res) => {

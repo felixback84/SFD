@@ -50,7 +50,10 @@ let db = {
     // app.post('/user/adventure/:userAdventuresId/inactive', FBAuth, postInInactiveUserAdventure);
     // get to know
     // or
-    // make a collection for activeAdventures
+    // make a collection for activeAdventures 
+    // app.get('/useradventures/:userAdventuresId/active', FBAuth, getActiveUserAdventures);
+    // getInactiveUserAdventures ***
+    // app.get('/useradventures/:userAdventuresId/inactive', FBAuth, getInactiveUserAdventures);
 
     userAdventures: [
         {   
@@ -93,7 +96,11 @@ let db = {
     // get to know
     // or
     // make a collection for activeDevices
-    // getActiveUserDevice and getInactiveUserDevice ***
+    // getActiveUserDevice ***
+    // app.get('/userdevices/:userDevicesId/active', FBAuth, getActiveUserDevices);
+    // getInactiveUserDevice ***
+    // app.get('/userdevices/:userDevicesId/inactive', FBAuth, getInactiveUserDevices);
+
 
     // post dataSets in user device ***
     // app.post('/user/device/:userDevicesId/dataset', FBAuth, postInDataSetsUserDevices);
