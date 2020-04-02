@@ -143,20 +143,26 @@ app.get('/adventure/:adventureId/favorite', FBAuth, favoriteAdventure);
 // unfavorites - nop
 app.get('/adventure/:adventureId/unfavorite', FBAuth, unfavoriteAdventure);
 
-// expotrt functions
+// export functions
 exports.api = functions.https.onRequest(app);
 
-// NOTIFICATIONS FOR DB WITH SOME ACTIONS IN DB
+///////////////////////////////// SOME ACTIONS IN DB WITHOUT REQUEST ////////////////////////////////
 // after creation of checkout 'devices'
-exports.createNotificationOnLike = 
-    functions.firestore.document('checkouts/{id}').where('type','==','device')
-        .onCreate((snapshot) => {
-
-        let snapShotDeviceID = snapshot.data().device.deviceId;
+exports.createUserDeviceAfterCheckout = functions.firestore
+    .document('checkouts/{checkoutsId}')
+    .onCreate((snap) => {
+        // Get an object representing the document
+        const newCheckout = snap.data();
+        // access a particular field as you would any JS property
+        const type = newCheckout.type;
+        // perform desired operations ...
+        if(type == 'device'){
+            let snapShotDeviceID = newCheckout.device.deviceId;
+            let snapShotUserHandle =  newCheckout.user.userHandle;
 
             const newUserDevice = {
                 deviceId: snapShotDeviceID,
-                userHandle: req.user.userHandle,
+                userHandle: snapShotUserHandle,
                 createdAt: new Date().toISOString(),
                 active: false
             };
@@ -167,7 +173,7 @@ exports.createNotificationOnLike =
 
             db
             .collection('userDevices')
-            .where('userHandle', '==', req.user.userHandle)
+            .where('userHandle', '==', snapShotUserHandle)
             .where('deviceId', '==', snapShotDeviceID)
             .limit(1)
             .get()
@@ -177,7 +183,7 @@ exports.createNotificationOnLike =
                 } else {
                     
                     db
-                        .doc(`/devices/${req.params.snapShotDeviceID}`)
+                        .doc(`/devices/${snapShotDeviceID}`)
                         .get()
                         .then((doc) => {
                             // now save the select info of .doc (device) of the collection
@@ -193,17 +199,80 @@ exports.createNotificationOnLike =
                             .collection('userDevices')
                             .add(allUserDeviceData)  
                         })
-                        .then(() => {
-                            return res.json(allUserDeviceData);
-                        }) 
-                        // .catch((err) => {
-                        //     console.error(err);
-                        //     res.status(500).json({ error: err.code });
-                        // });
                 }
             })
             .catch((err) => {
                 console.error(err);
                 res.status(500).json({ error: err.code });
             });
+        } else {
+            return res.status(404).json({ error: 'error from userDevice inscription, its an adventure' });
+        }
+    });
+
+    // after creation of checkout 'adventures'
+exports.createUserDeviceAfterCheckout = functions.firestore
+.document('checkouts/{checkoutsId}')
+.onCreate((snap) => {
+    // Get an object representing the document
+    const newCheckout = snap.data();
+    // access a particular field as you would any JS property
+    const type = newCheckout.type;
+    // perform desired operations ...
+    if(type == 'adventures'){
+        let snapShotAdventureID = newCheckout.adventure.adventureId;
+        let snapShotUserHandle =  newCheckout.user.userHandle;
+
+        const newUserAdventure = {
+            adventureId: snapShotAdventureID,
+            userHandle: snapShotUserHandle,
+            createdAt: new Date().toISOString(),
+            active: false
+        };
+
+        // object to hold all info, newUserDevice, deviceData
+        let allUserAdventureData = {};
+        allUserAdventureData = newUserAdventure;
+
+        db
+        .collection('userAdventures')
+        .where('userHandle', '==', snapShotUserHandle)
+        .where('adventureId', '==', snapShotAdventureID)
+        .limit(1)
+        .get()
+        .then((data) => {
+            if (!data.empty) {
+                return res.status(404).json({ error: 'Adventure already yours' });
+            } else {
+                
+                db
+                    .doc(`/adventures/${snapShotAdventureID}`)
+                    .get()
+                    .then((doc) => {
+                        // now save the select info of .doc (device) of the collection
+                        let selectInfoAdventure = {
+                            title: doc.data().title,
+                            description: doc.data().description,
+                            imageUrl: doc.data().imageUrl,
+                            createdAt: doc.data().createdAt,
+                            duration: doc.data().duration,
+                            tags: doc.data().tags,
+                            language: doc.data().language,
+                            audioUrl: doc.data().audioUrl
+                        }
+                        allUserAdventureData.adventure = selectInfoAdventure;
+                        // write in global object
+                        return db
+                            .collection('userAdventures')
+                            .add(allUserAdventureData)   
+                    })
+            }
         })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).json({ error: err.code });
+        });
+    } else {
+        return res.status(404).json({ error: 'error from userDevice inscription, its an adventure' });
+    }
+});
