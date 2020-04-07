@@ -67,11 +67,16 @@ let db = {
                 title: 'Wild spaces adventures',
                 description: 'hello from description of the adventure',
                 imageUrl: 'image/dsfsdkfghskdfgs/dgfdhfgdh',
+                videoUrl: 'https://www.youtube.com/asderfihiowwp',
                 createdAt: '2019-03-15T10:59:52.798Z',
                 duration: 60,
                 tags: ['adventure', 'space'],
                 language: ['english'], 
-                audioUrl: 'audio/dsfsdkfghskdfgs/dgfdhfgdh'
+                audioUrl: 'audio/dsfsdkfghskdfgs/dgfdhfgdh',
+                device: {
+                    nameOfDevice: 'halo',
+                    badgeUrl: 'image/dsfsdkfghskdfgs/dgfdhfgdh'
+                }
             }
         }
     ], 
@@ -117,9 +122,14 @@ let db = {
             createdAt: '2019-03-15T10:59:52.798Z',
             active: true | false,
             deviceData: {
+                deviceId: 'MZInC971tJYurv3OYzjR',
                 nameOfDevice: 'halo',
+                imageUrl: 'image/dsfsdkfghskdfgs/dgfdhfgdh',
+                videoUrl: 'https://www.youtube.com/asderfihiowwp',
+                badgeUrl: 'image/dsfsdkfghskdfgs/dgfdhfgdh',
                 createdAt: '2019-03-15T10:59:52.798Z',
                 ageRate: '4 to 8 years',
+                howManyAdventures: 1
             },
             // sub - collection in userDevices for post(data mini servers) ang get (keyids), 
             // to list keyIds ang fill with mini servers data (keyValues)
@@ -225,7 +235,7 @@ let db = {
             ageRate: '4 to 8 years',
             likesCount: 2,
             commentsCount: 3,
-            howManyAdevntures: 1,
+            howManyAdventures: 1,
             dataSets:  // exe object to design the sub - collection in userDevices
                 {   
                     dataSetsId: 'MZInC971tJYurv3OYzjR',
@@ -319,10 +329,8 @@ let db = {
     ]
 }
 
-
 ////////////////////// REDUX PLAN ////////////////////////
 /// objects for reducers 
-
 let userData = {
     credentials:{
         userId: 'gj42hyyuo4m37k345k5dh83',
@@ -337,11 +345,21 @@ let userData = {
         bio: 'Hello, my name is user, nice to meet you'
     },
     activeUserDevices:{
-
+        userDevicesId: 'MZInC971tJYurv3OYzjR',
+        userHandle: 'CarlosTal84'
     },
-    activeUserAdventures:{
-
+    activeUserAdventures:{ 
+        userAdventuresId: '3vvH32idn5cGF0BESWVl',
+        userHandle: 'CarlosTal84'
     },
+    likes:[
+        {
+            userhandle: 'CarlosTal84',
+            deviceId: 'MZInC971tJYurv3OYzjR',
+            adventureId: null,
+            type: 'adventures | devices'
+        }
+    ],
     userDevices:[
         {
             userDevicesId: 'vwUPg64eysTLaok4CVn4',
@@ -350,36 +368,15 @@ let userData = {
             createdAt: '2019-03-15T10:59:52.798Z',
             active: true | false,
             deviceData: {
+                deviceId: 'MZInC971tJYurv3OYzjR',
                 nameOfDevice: 'halo',
+                imageUrl: 'image/dsfsdkfghskdfgs/dgfdhfgdh',
+                videoUrl: 'https://www.youtube.com/asderfihiowwp',
+                badgeUrl: 'image/dsfsdkfghskdfgs/dgfdhfgdh',
                 createdAt: '2019-03-15T10:59:52.798Z',
                 ageRate: '4 to 8 years',
-            },
-            dataSets:  
-                [
-                    {   
-                        on: false,
-                        connected: false,
-                        createdAt: '2019-03-15T10:59:52.798Z',
-                        tail: {
-                            proximity: 0,
-                            temperature: 0,
-                            pressure: 0,
-                            motion: 0,
-                            position: {
-                                x: 0,
-                                y: 0,
-                                z: 0
-                            }
-                        },
-                        midi: {
-                            color: "#fff",
-                            speakers: false,
-                            mic: false,
-                            lights: false,
-                            vibration: false
-                        }
-                    }
-                ]
+                howManyAdventures: 1
+            }
         }
     ],
     userAdventures:[
@@ -394,11 +391,16 @@ let userData = {
                 title: 'Wild spaces adventures',
                 description: 'hello from description of the adventure',
                 imageUrl: 'image/dsfsdkfghskdfgs/dgfdhfgdh',
+                videoUrl: 'https://www.youtube.com/asderfihiowwp',
                 createdAt: '2019-03-15T10:59:52.798Z',
                 duration: 60,
                 tags: ['adventure', 'space'],
                 language: ['english'], 
-                audioUrl: 'audio/dsfsdkfghskdfgs/dgfdhfgdh'
+                audioUrl: 'audio/dsfsdkfghskdfgs/dgfdhfgdh',
+                device: {
+                    nameOfDevice: 'halo',
+                    badgeUrl: 'image/dsfsdkfghskdfgs/dgfdhfgdh'
+                }
             }
         }
     ],
@@ -408,29 +410,22 @@ let userData = {
             createdAt: '2019-03-15T10:59:52.798Z',
             type: 'device | adventure',
             state:'pending | delivery | finish',
-            plastic:'**********2356',
+            userHandle: 'CarlosTal84',
             user: {
-                userHandle: 'CarlosTal84',
                 names: 'Carlos Alberto',
-                lastname: 'Talero Jaocme'
+                lastname: 'Talero Jaocme',
+                email:'carlos.talero.jacome@gmail.com'
             },
             address: {
                 city: 'Bogotá D.C',
                 addressToDelivery: 'Av 14 47 - 39 Apto 212-A',
+                plastic:'**********2356'
             },
             adventure:{
                 adventureId: '3vvH32idn5cGF0BESWVl',
                 title: 'Wild spaces adventures',
                 price: 29.99
             } 
-        }
-    ],
-    likes:[
-        {
-            userhandle: 'CarlosTal84',
-            deviceId: 'MZInC971tJYurv3OYzjR',
-            adventureId: null,
-            type: 'adventures | devices'
         }
     ]
 };
@@ -466,7 +461,7 @@ let devices = [
                     }
                 },
                 midi: {
-                    color: "#fff",
+                    color: "",
                     speakers: false,
                     mic: false,
                     lights: false,
@@ -496,9 +491,30 @@ let adventures = [
             badgeUrl: 'image/dsfsdkfghskdfgs/dgfdhfgdh'
         }
     }
+];
+
+let dataSets = [
+    {   
+        on: false,
+        connected: false,
+        createdAt: '2019-03-15T10:59:52.798Z',
+        tail: {
+            proximity: 0,
+            temperature: 0,
+            pressure: 0,
+            motion: 0,
+            position: {
+                x: 0,
+                y: 0,
+                z: 0
+            }
+        },
+        midi: {
+            color: "#fff",
+            speakers: false,
+            mic: false,
+            lights: false,
+            vibration: false
+        }
+    }
 ]
-
-
-
-
-

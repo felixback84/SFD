@@ -87,7 +87,7 @@ exports.getAdventure = (req, res) => {
         });
 };
 
-// Post an adventure for an user
+// Post an adventure for an user - without use
 exports.postInUserAdventures = (req, res) => {
      // object to save and send main data in collection userAdventure (header info)
     const newUserAdventure = {
@@ -156,6 +156,7 @@ exports.postDataCheckOutAdventure = (req, res) => {
 
     // put addiotional info for checkout
     let checkoutData = {
+        userHandle: req.user.userHandle,
         createdAt: new Date().toISOString(),
         type: 'adventure',
         state:'pending'
@@ -171,19 +172,16 @@ exports.postDataCheckOutAdventure = (req, res) => {
 
     // add address to global var
     dataCheckout.address = newUserAdressToDelivery;
-    //console.log(dataCheckout);
     // ask for user data
     db
         .doc(`/users/${req.user.userHandle}`)
         .get()
         .then((doc) => {
             let userDataFilter = {
-                userHandle: doc.data().userHandle,
                 names: doc.data().names,
                 lastname: doc.data().lastname,
                 email: doc.data().email
             }
-            //console.log('user:' + dataCheckout);
             dataCheckout.user = userDataFilter;
         })
         .catch((err) => {
@@ -201,7 +199,6 @@ exports.postDataCheckOutAdventure = (req, res) => {
             price: doc.data().price
         };
             dataCheckout.adventure = adventureDataFilter;
-            //console.log(dataCheckout);
             console.log(dataCheckout);
             // add final object in db
             db.collection('checkouts').add(dataCheckout);

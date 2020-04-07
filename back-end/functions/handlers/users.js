@@ -194,22 +194,17 @@ exports.getAuthenticatedUser = (req, res) => {
             return db
                 .collection('userAdventures')
                 .where('userHandle', '==', req.user.userHandle)
-                // .orderBy('createdAt', 'desc')
-                // .limit(10)
-                .get();
+                .get()
         })
         .then((data) => {
             userData.userAdventures = [];
             data.forEach((doc) => {
                 userData.userAdventures.push(doc.data());
             });
-            //return res.json(userData);
             return db
                 .collection('likes')
                 .where('userHandle', '==', req.user.userHandle)
-                // .orderBy('createdAt', 'desc')
-                // .limit(10)
-                .get();
+                .get()
         })
         .then((data) => {
             userData.likes = [];
@@ -217,28 +212,34 @@ exports.getAuthenticatedUser = (req, res) => {
                 userData.likes.push(doc.data());
             });
             return db
-                .collection('comments')
+                .collection('checkouts')
                 .where('userHandle', '==', req.user.userHandle)
-                // .orderBy('createdAt', 'desc')
-                // .limit(10)
-                .get();
+                .get()
         })
         .then((data) => {
-            userData.comments = [];
+            userData.checkouts = [];
             data.forEach((doc) => {
-                userData.comments.push(doc.data());
+                userData.checkouts.push(doc.data());
             });
             return db
-                .collection('favoriteContent')
+                .collection('activeUserDevices')
                 .where('userHandle', '==', req.user.userHandle)
-                // .orderBy('createdAt', 'desc')
-                // .limit(10)
-                .get();
+                .get()
         })
         .then((data) => {
-            userData.favoriteContent = [];
+            userData.activeUserDevices;
             data.forEach((doc) => {
-                userData.favoriteContent.push(doc.data());
+                userData.activeUserDevices.push(doc.data());
+            });
+            return db
+                .collection('activeUserAdventures')
+                .where('userHandle', '==', req.user.userHandle)
+                .get()
+        })
+        .then((data) => {
+            userData.activeUserAdventures;
+            data.forEach((doc) => {
+                userData.activeUserAdventures.push(doc.data());
             });
             return res.json(userData);
         })

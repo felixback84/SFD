@@ -81,7 +81,7 @@ exports.getDevice = (req, res) => {
         });
 };
 
-// Post a device for an user
+// Post a device for an user - without use
 exports.postInUserDevices = (req, res) => {
     const newUserDevice = {
         deviceId: req.params.deviceId,
@@ -137,7 +137,7 @@ exports.postInUserDevices = (req, res) => {
         });
 };
 
-// post data for checkout to post in userDevices
+// post data for checkout to post in userDevices 
 exports.postDataCheckOutDevice = (req, res) => {
 
     // global var
@@ -145,6 +145,7 @@ exports.postDataCheckOutDevice = (req, res) => {
 
     // put addiotional info for checkout
     let checkoutData = {
+        userHandle: req.user.userHandle,
         createdAt: new Date().toISOString(),
         type: 'device',
         state:'pending'
@@ -160,19 +161,16 @@ exports.postDataCheckOutDevice = (req, res) => {
 
     // add address to global var
     dataCheckout.address = newUserAdressToDelivery;
-    //console.log(dataCheckout);
     // ask for user data
     db
         .doc(`/users/${req.user.userHandle}`)
         .get()
         .then((doc) => {
             let userDataFilter = {
-                userHandle: doc.data().userHandle,
                 names: doc.data().names,
                 lastname: doc.data().lastname,
                 email: doc.data().email
             }
-            //console.log('user:' + dataCheckout);
             dataCheckout.user = userDataFilter;
         })
         .catch((err) => {
@@ -190,7 +188,6 @@ exports.postDataCheckOutDevice = (req, res) => {
             price: doc.data().price
         };
             dataCheckout.device = deviceDataFilter;
-            //console.log(dataCheckout);
             console.log(dataCheckout);
             // add final object in db
             db.collection('checkouts').add(dataCheckout);

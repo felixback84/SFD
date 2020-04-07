@@ -8,23 +8,26 @@ import Navbar from './components/layout/Navbar';
 import home from './pages/home';
 import signup from './pages/signup';
 import login from './pages/login';
-
 import myWorldDevices from './pages/myWorldDevices';
 import myWorldAdventures from './pages/myWorldAdventures';
-
 import storeDevices from './pages/storeDevices';
 import storeAdventures from './pages/storeAdventures';
-
 import device from './pages/device';
 import deviceDataSets from './pages/deviceDataSets';
-
 import notificationsDevices from './pages/notificationsDevices';
 import notificationsAdventures from './pages/notificationsAdventures';
-
 import profile from './pages/profile';
 import addCart from './pages/addCart';
 import buys from './pages/buys';
 
+// jwt 
+import jwtDecode from 'jwt-decode';
+// redux 
+import { Provider } from 'react-redux';
+import store from './redux/store';
+// axios
+import axios from 'axios';
+axios.defaults.baseURL = 'https://us-central1-sfdd-d8a16.cloudfunctions.net/api';
 
 class App extends Component {
   render() {
