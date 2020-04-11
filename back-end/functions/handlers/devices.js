@@ -54,7 +54,7 @@ exports.getDevice = (req, res) => {
             });
             // return res.json(deviceData);
         })
-    // ask for likes - check if this is usefull in ux    
+    // ask for likes    
     db
         .doc(`/devices/${req.params.deviceId}`)
         .get()
@@ -179,25 +179,25 @@ exports.postDataCheckOutDevice = (req, res) => {
         });
     // ask for device info
     db
-    .doc(`/devices/${req.params.deviceId}`)
-    .get()
-    .then((doc) => {
-        let deviceDataFilter = {
-            deviceId: req.params.deviceId,
-            nameOfDevice: doc.data().nameOfDevice,
-            price: doc.data().price
-        };
-            dataCheckout.device = deviceDataFilter;
-            console.log(dataCheckout);
-            // add final object in db
-            db.collection('checkouts').add(dataCheckout);
-            // send response from server
-            return res.json('done with the checkout');
-    })
-    .catch((err) => {
-        console.error(err);
-        res.status(500).json({ error: err.code });
-    });
+        .doc(`/devices/${req.params.deviceId}`)
+        .get()
+        .then((doc) => {
+            let deviceDataFilter = {
+                deviceId: req.params.deviceId,
+                nameOfDevice: doc.data().nameOfDevice,
+                price: doc.data().price
+            };
+                dataCheckout.device = deviceDataFilter;
+                console.log(dataCheckout);
+                // add final object in db
+                db.collection('checkouts').add(dataCheckout);
+                // send response from server
+                return res.json('done with the checkout');
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).json({ error: err.code });
+        });
 }
 
 // post in dataSets in user devices

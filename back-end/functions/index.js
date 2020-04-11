@@ -5,9 +5,9 @@ const { db } = require('./utilities/admin');
 const app = require('express')();
 // middleware for auth
 const FBAuth = require('./utilities/fbAuth');
-// cors
-// const cors = require('cors');
-// app.use(cors({ origin: true }));
+//cors
+const cors = require('cors');
+app.use(cors({ origin: true }));
 
 // handlers
 // users

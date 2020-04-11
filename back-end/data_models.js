@@ -21,7 +21,7 @@ let db = {
             names: 'Carlos Alberto',
             lastname: 'Talero Jaocme',
             email: 'carlos.talero.jacome@gmail.com',
-            userhandle: 'CarlosTal84',
+            userHandle: 'CarlosTal84',
             phone: 573005256068,
             location: 'London, UK',
             createdAt: '2019-03-15T10:59:52.798Z',
@@ -337,21 +337,25 @@ let userData = {
         names: 'Carlos Alberto',
         lastname: 'Talero Jaocme',
         email: 'carlos.talero.jacome@gmail.com',
-        userhandle: 'CarlosTal84',
+        userHandle: 'CarlosTal84',
         phone: 573005256068,
         location: 'London, UK',
         createdAt: '2019-03-15T10:59:52.798Z',
         imageUrl: 'image/dsfsdkfghskdfgs/dgfdhfgdh',
         bio: 'Hello, my name is user, nice to meet you'
     },
-    activeUserDevices:{
-        userDevicesId: 'MZInC971tJYurv3OYzjR',
-        userHandle: 'CarlosTal84'
-    },
-    activeUserAdventures:{ 
-        userAdventuresId: '3vvH32idn5cGF0BESWVl',
-        userHandle: 'CarlosTal84'
-    },
+    activeUserDevices:[
+        {
+            userDevicesId: 'MZInC971tJYurv3OYzjR',
+            userHandle: 'CarlosTal84'
+        }
+    ],
+    activeUserAdventures:[
+        { 
+            userAdventuresId: '3vvH32idn5cGF0BESWVl',
+            userHandle: 'CarlosTal84'
+        }
+    ],
     likes:[
         {
             userhandle: 'CarlosTal84',
@@ -404,7 +408,7 @@ let userData = {
             }
         }
     ],
-    checkOuts:[
+    checkouts:[
         {
             checkOutsId: 'pzdTQLfRpS4FfNTXeisH',
             createdAt: '2019-03-15T10:59:52.798Z',
@@ -467,7 +471,23 @@ let devices = [
                     lights: false,
                     vibration: false
                 }
-            }
+            },
+            likes: [
+                {
+                    userhandle: 'CarlosTal84',
+                    deviceId: 'MZInC971tJYurv3OYzjR',
+                    type: 'devices'
+                }
+            ],
+            comments: [
+                {
+                    userhandle: 'CarlosTal84',
+                    deviceId: 'MZInC971tJYurv3OYzjR',
+                    bodyComment: 'nice one mate!',
+                    createdAt: '2019-03-15T10:59:52.798Z',
+                    type: 'devices'
+                }
+            ]
     }
 ];
 
@@ -489,7 +509,23 @@ let adventures = [
         device: {
             nameOfDevice: 'halo',
             badgeUrl: 'image/dsfsdkfghskdfgs/dgfdhfgdh'
-        }
+        },
+        likes: [
+            {
+                userhandle: 'CarlosTal84',
+                adventureId: 'MZInC971tJYurv3OYzjR',
+                type: 'adventures'
+            }
+        ],
+        comments: [
+            {
+                userhandle: 'CarlosTal84',
+                adventureId: 'MZInC971tJYurv3OYzjR',
+                bodyComment: 'nice one mate!',
+                createdAt: '2019-03-15T10:59:52.798Z',
+                type: 'adventures'
+            }
+        ]
     }
 ];
 

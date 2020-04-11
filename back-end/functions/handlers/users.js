@@ -98,7 +98,7 @@ exports.login = (req,res) => {
             console.error(err);
             // auth/wrong-password
             // auth/user-not-found
-            return res
+            return res.header('Access-Control-Allow-Origin', '*')
                 .status(403)
                 .json({ general: 'Wrong credentials, please try again' });
         });

@@ -42,7 +42,7 @@ const StyledMenuItem = withStyles((theme) => ({
                 color: theme.palette.common.white,
             },
         },
-    },
+    }, 
 }))(MenuItem);
 
 export default function MyButtonDevice() {
