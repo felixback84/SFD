@@ -5,27 +5,25 @@ import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types'; 
 
 // Components
-import UserDevice from '../components/devices/UserDevice';
+import UserDevice from '../components/userDevices/UserDevice';
 import UserDeviceSkeleton from '../utilities/UserDeviceSkeleton';
 
 // Redux stuff
 import { connect } from 'react-redux';
-//import { getScreams } from '../redux/actions/dataActions';
+import { getUserData } from '../redux/actions/userActions';
 
 class myWorldDevices extends Component {
 
-    // componentDidMount() {
-    //     this.props.getScreams(); 
+    componentDidMount() {
+        this.props.getUserData(); 
         
-    // }
+    }
 
     render() {
-        //const { screams, loading } = this.props.data;
-        const userDevices = this.props.user.userDevices;
-        const loading = this.props.user.loading;
-
+        const { userDevices, loading } = this.props.user;
+        
         let userDevicesMarkup = !loading ? (
-            userDevices.map(userDevice => <UserDevice key ={userDevice.userDeviceId} userDevice ={userDevice}/>)
+            userDevices.map(userDevice => <UserDevice key={userDevice.userDeviceId} userDevice={userDevice}/>)
         ) : (
             <UserDeviceSkeleton/>
         );
@@ -39,12 +37,12 @@ class myWorldDevices extends Component {
     } 
 }
 
-home.propTypes = {
+myWorldDevices.propTypes = {
     user: PropTypes.object.isRequired
 }
 
 const mapStateToProps = state => ({
-    user: state.user.userDevices
+    user: state.user
 })
 
-export default connect(mapStateToProps)(myWorldDevices);
+export default connect(mapStateToProps, {getUserData})(myWorldDevices);
