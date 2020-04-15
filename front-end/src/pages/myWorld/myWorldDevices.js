@@ -5,12 +5,12 @@ import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types'; 
 
 // Components
-import UserDevice from '../components/userDevices/UserDevice';
-import UserDeviceSkeleton from '../utilities/UserDeviceSkeleton';
+import UserDevice from '../../components/myWorld/userDevices/UserDevice';
+import UserDeviceSkeleton from '../../utilities/UserDeviceSkeleton';
 
 // Redux stuff
 import { connect } from 'react-redux';
-import { getUserData } from '../redux/actions/userActions';
+import { getUserData } from '../../redux/actions/userActions';
 
 class myWorldDevices extends Component {
 
